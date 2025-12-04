@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logbook Magang</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .logbook-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            position: relative;
+        }
+
+        .logbook-item h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 8px;
+            padding-right: 80px;
+        }
+
+        .logbook-actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #2980b9;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        .logbook-item p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .logbook-item .date {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .logbook-image {
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .logbook-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logbook-image img:hover {
+            transform: scale(1.02);
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 200px;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .image-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .image-modal-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
+        .image-modal-close:hover {
+            color: #667eea;
+        }
+
+        .file-link {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .file-link:hover {
+            background: #5568d3;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info span {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .file-upload {
+            border: 2px dashed #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #667eea;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            margin-bottom: -2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Page -->
+        <div id="loginPage">
+            <div class="header">
+                   <img src="eagle.png" width="60" style="vertical-align: middle;">
+                <h1>Logbook Magang</h1>
+                <p>Sistem Pencatatan Kegiatan Magang</p>
+            </div>
+            <div class="content">
+                <div id="loginAlert"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Username <span class="required">*</span></label>
+                        <input type="text" id="username" required placeholder="Masukkan username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password <span class="required">*</span></label>
+                        <input type="password" id="password" required placeholder="Masukkan password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="loginBtn">Masuk</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Student Page -->
+        <div id="studentPage" class="hidden">
+            <div class="header">
+                 <img src="eagle.png" width="60" style="vertical-align: middle;">
+                <h1>Logbook Saya</h1>
+                <p>Catat kegiatan magang harian Anda</p>
+            </div>
+            <div class="content">
+                <div class="user-info">
+                    <span id="studentName">Siswa</span>
+                    <button class="btn-secondary" onclick="logout()" style="padding: 8px 15px; width: auto; border-radius: 5px;">Keluar</button>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="showTab('add')">Tambah Logbook</div>
+                    <div class="tab" onclick="showTab('view')">Lihat Logbook</div>
+                </div>
+
+                <div id="addTab">
+                    <div id="studentAlert"></div>
+                    <form id="logbookForm">
+                        <div class="form-group">
+                            <label>Tanggal <span class="required">*</span></label>
+                            <input type="date" id="tanggal" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Judul Kegiatan <span class="required">*</span></label>
+                            <input type="text" id="judul" required placeholder="Contoh: Membuat video promosi">
+                        </div>
+                        <div class="form-group">
+                            <label>Deskripsi <span class="required">*</span></label>
+                            <textarea id="deskripsi" required placeholder="Jelaskan kegiatan yang dilakukan"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Upload Foto (Opsional)</label>
+                            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                                <p>📷 Klik untuk upload foto</p>
+                                <p style="font-size: 12px; color: #999;">Max: 2MB</p>
+                                <input type="file" id="fileInput" accept="image/*">
+                                <div id="fileName" class="file-name"></div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Simpan Logbook</button>
+                        <button type="button" class="btn btn-secondary hidden" id="cancelBtn" onclick="cancelEdit()">Batal Edit</button>
+                    </form>
+                </div>
+
+                <div id="viewTab" class="hidden">
+                    <div id="logbookList" class="loading">Memuat data...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Page -->
+        <div id="adminPage" class="hidden">
+            <div class="header">
+                <img src="eagle.png" width="60" style="vertical-align: middle;">
+                <h1>Dashboard Admin</h1>
+                <p>Kelola dan pantau logbook siswa</p>
+            </div>
+            <div class="content">
+                <div class="user-info">
+                    <span>Admin</span>
+                    <button class="btn-secondary" onclick="logout()" style="padding: 8px 15px; width: auto; border-radius: 5px;">Keluar</button>
+                </div>
+
+                <div id="adminAlert"></div>
+                
+                <div class="form-group">
+                    <label>Pilih Siswa</label>
+                    <select id="studentSelect" onchange="loadStudentLogbook()">
+                        <option value="">-- Pilih Siswa --</option>
+                    </select>
+                </div>
+
+                <div id="adminLogbookList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal untuk zoom gambar -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <span class="image-modal-close">&times;</span>
+        <div class="image-modal-content">
+            <img id="modalImage" src="" alt="Preview">
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyIDiZvSCeJUzBufT1RqrB51vQk86gEOX0TPiJ5v-i_8z3pBJB45MwFvM3xIeXexOTbg/exec";
+        let currentUser = null;
+        let currentRole = null;
+        let editingLogbookNo = null; // Track logbook yang sedang diedit
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            const tanggalInput = document.getElementById('tanggal');
+            if (tanggalInput) tanggalInput.value = today;
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Memproses...';
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=login&username=${username}&password=${password}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    currentUser = data.user;
+                    currentRole = data.role;
+                    
+                    document.getElementById('loginPage').classList.add('hidden');
+                    
+                    if (data.role === 'admin') {
+                        document.getElementById('adminPage').classList.remove('hidden');
+                        loadStudents();
+                    } else {
+                        document.getElementById('studentPage').classList.remove('hidden');
+                        document.getElementById('studentName').textContent = data.nama;
+                        loadMyLogbook();
+                    }
+                } else {
+                    showAlert('loginAlert', data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('loginAlert', 'Gagal login: ' + error.message, 'error');
+            }
+
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Masuk';
+        });
+
+        document.getElementById('logbookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            
+            const isEditing = editingLogbookNo !== null;
+            submitBtn.textContent = isEditing ? 'Mengupdate...' : 'Menyimpan...';
+
+            const tanggal = document.getElementById('tanggal').value;
+            const judul = document.getElementById('judul').value;
+            const deskripsi = document.getElementById('deskripsi').value;
+            const fileInput = document.getElementById('fileInput');
+            
+            let fileData = '';
+            let fileName = '';
+            
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                
+                // Validasi ukuran file (max 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    showAlert('studentAlert', '⚠️ Ukuran file maksimal 2MB!', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = isEditing ? 'Update Logbook' : 'Simpan Logbook';
+                    return;
+                }
+                
+                fileName = file.name;
+                
+                try {
+                    fileData = await convertToBase64(file);
+                } catch (error) {
+                    console.error('Error converting file:', error);
+                    showAlert('studentAlert', '⚠️ Gagal memproses gambar', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = isEditing ? 'Update Logbook' : 'Simpan Logbook';
+                    return;
+                }
+            }
+
+            try {
+                const payload = {
+                    action: isEditing ? 'updateLogbook' : 'addLogbook',
+                    username: currentUser,
+                    tanggal: tanggal,
+                    judul: judul,
+                    deskripsi: deskripsi,
+                    fileData: fileData,
+                    fileName: fileName
+                };
+                
+                if (isEditing) {
+                    payload.no = editingLogbookNo;
+                }
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('studentAlert', isEditing ? '✅ Logbook berhasil diupdate!' : '✅ Logbook berhasil disimpan!', 'success');
+                    document.getElementById('logbookForm').reset();
+                    document.getElementById('fileName').textContent = '';
+                    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+                    editingLogbookNo = null;
+                    submitBtn.textContent = 'Simpan Logbook';
+                    
+                    // Hide cancel button
+                    document.getElementById('cancelBtn').classList.add('hidden');
+                    
+                    // Refresh list di tab view
+                    loadMyLogbook();
+                } else {
+                    showAlert('studentAlert', '❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('studentAlert', '❌ Gagal menyimpan: ' + error.message, 'error');
+            }
+
+            submitBtn.disabled = false;
+            if (!isEditing) {
+                submitBtn.textContent = 'Simpan Logbook';
+            }
+        });
+
+        async function loadStudents() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getStudents`);
+                const data = await response.json();
+                
+                const select = document.getElementById('studentSelect');
+                select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+                
+                data.students.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.username;
+                    option.textContent = student.nama;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                showAlert('adminAlert', 'Gagal memuat siswa', 'error');
+            }
+        }
+
+        async function loadStudentLogbook() {
+            const username = document.getElementById('studentSelect').value;
+            const listDiv = document.getElementById('adminLogbookList');
+            
+            if (!username) {
+                listDiv.innerHTML = '';
+                return;
+            }
+
+            listDiv.innerHTML = '<div class="loading">Memuat data...</div>';
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getLogbook&username=${username}`);
+                const data = await response.json();
+
+                if (data.success && data.logbook.length > 0) {
+                    listDiv.innerHTML = data.logbook.map(log => {
+                        let imageHtml = '';
+                        
+                        // Jika ada file ID, tampilkan preview gambar
+                        if (log.fileId) {
+                            const thumbnailUrl = `https://drive.google.com/thumbnail?id=${log.fileId}&sz=w400`;
+                            imageHtml = `
+                                <div class="logbook-image">
+                                    <img src="${thumbnailUrl}" 
+                                         alt="Foto kegiatan" 
+                                         onclick="window.open('${log.berkas}', '_blank')"
+                                         onerror="this.parentElement.innerHTML='<div class=image-placeholder>📷 Foto tidak dapat dimuat</div>'">
+                                </div>
+                            `;
+                        } else if (log.berkas && log.berkas.includes('drive.google.com')) {
+                            // Fallback untuk data lama tanpa fileId
+                            imageHtml = `<a href="${log.berkas}" target="_blank" class="file-link">📷 Lihat Foto</a>`;
+                        }
+                        
+                        return `
+                            <div class="logbook-item">
+                                <h3>${log.judul}</h3>
+                                <p>${log.deskripsi}</p>
+                                <p class="date">📅 ${log.tanggal}</p>
+                                ${imageHtml}
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    listDiv.innerHTML = '<div class="alert alert-info">Belum ada logbook untuk siswa ini.</div>';
+                }
+            } catch (error) {
+                console.error('Error loading student logbook:', error);
+                listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat logbook.</div>';
+            }
+        }
+
+        async function loadMyLogbook() {
+            const listDiv = document.getElementById('logbookList');
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getLogbook&username=${currentUser}`);
+                const data = await response.json();
+
+                if (data.success && data.logbook.length > 0) {
+                    listDiv.innerHTML = data.logbook.map(log => {
+                        let imageHtml = '';
+                        
+                        // Jika ada file ID, tampilkan preview gambar
+                        if (log.fileId) {
+                            const thumbnailUrl = `https://drive.google.com/thumbnail?id=${log.fileId}&sz=w400`;
+                            const fullImageUrl = `https://drive.google.com/uc?id=${log.fileId}`;
+                            imageHtml = `
+                                <div class="logbook-image">
+                                    <img src="${thumbnailUrl}" 
+                                         alt="Foto kegiatan" 
+                                         onclick="openImageModal('${fullImageUrl}')"
+                                         onerror="this.parentElement.innerHTML='<div class=image-placeholder>📷 Foto tidak dapat dimuat</div>'">
+                                </div>
+                            `;
+                        } else if (log.berkas && log.berkas.includes('drive.google.com')) {
+                            // Fallback untuk data lama tanpa fileId
+                            imageHtml = `<a href="${log.berkas}" target="_blank" class="file-link">📷 Lihat Foto</a>`;
+                        }
+                        
+                        return `
+                            <div class="logbook-item">
+                                <div class="logbook-actions">
+                                    <button class="btn-action btn-edit" onclick="editLogbook(${log.no}, '${escapeHtml(log.tanggal)}', '${escapeHtml(log.judul)}', '${escapeHtml(log.deskripsi)}')">✏️ Edit</button>
+                                    <button class="btn-action btn-delete" onclick="deleteLogbook(${log.no})">🗑️ Hapus</button>
+                                </div>
+                                <h3>${log.judul}</h3>
+                                <p>${log.deskripsi}</p>
+                                <p class="date">📅 ${log.tanggal}</p>
+                                ${imageHtml}
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    listDiv.innerHTML = '<div class="alert alert-info">Belum ada logbook. Mulai tambahkan kegiatan Anda!</div>';
+                }
+            } catch (error) {
+                console.error('Error loading logbook:', error);
+                listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat logbook.</div>';
+            }
+        }
+
+        // Fungsi untuk edit logbook
+        function editLogbook(no, tanggal, judul, deskripsi) {
+            editingLogbookNo = no;
+            
+            // Konversi tanggal dari dd/MM/yyyy ke yyyy-MM-dd
+            const dateParts = tanggal.split('/');
+            const formattedDate = dateParts.length === 3 ? `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}` : tanggal;
+            
+            // Isi form dengan data yang akan diedit
+            document.getElementById('tanggal').value = formattedDate;
+            document.getElementById('judul').value = judul;
+            document.getElementById('deskripsi').value = deskripsi;
+            
+            // Update tombol submit dan tampilkan tombol cancel
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.textContent = 'Update Logbook';
+            submitBtn.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
+            
+            const cancelBtn = document.getElementById('cancelBtn');
+            cancelBtn.classList.remove('hidden');
+            
+            // Pindah ke tab tambah logbook
+            showTab('add');
+            
+            // Scroll ke atas
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            showAlert('studentAlert', '📝 Mode edit: Ubah data dan klik "Update Logbook"', 'info');
+        }
+
+        // Fungsi untuk cancel edit
+        function cancelEdit() {
+            editingLogbookNo = null;
+            
+            // Reset form
+            document.getElementById('logbookForm').reset();
+            document.getElementById('fileName').textContent = '';
+            document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+            
+            // Reset tombol
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.textContent = 'Simpan Logbook';
+            submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            
+            const cancelBtn = document.getElementById('cancelBtn');
+            cancelBtn.classList.add('hidden');
+            
+            // Clear alert
+            document.getElementById('studentAlert').innerHTML = '';
+        }
+
+        // Fungsi untuk hapus logbook
+        async function deleteLogbook(no) {
+            if (!confirm('Apakah Anda yakin ingin menghapus logbook ini?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=deleteLogbook&username=${currentUser}&no=${no}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('studentAlert', '✅ Logbook berhasil dihapus!', 'success');
+                    loadMyLogbook();
+                } else {
+                    showAlert('studentAlert', '❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('studentAlert', '❌ Gagal menghapus: ' + error.message, 'error');
+            }
+        }
+
+        // Helper function untuk escape HTML
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;',
+                '\n': ' ',
+                '\r': ''
+            };
+            return text.replace(/[&<>"'\n\r]/g, m => map[m]);
+        }
+
+        function showAlert(elementId, message, type) {
+            const alertDiv = document.getElementById(elementId);
+            alertDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => alertDiv.innerHTML = '', 5000);
+        }
+
+        function convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        document.getElementById('fileInput').addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : '';
+            document.getElementById('fileName').textContent = fileName ? `✓ ${fileName}` : '';
+        });
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            
+            // Find and activate the correct tab
+            const tabs = document.querySelectorAll('.tab');
+            if (tab === 'add') {
+                tabs[0].classList.add('active');
+                document.getElementById('addTab').classList.remove('hidden');
+                document.getElementById('viewTab').classList.add('hidden');
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('addTab').classList.add('hidden');
+                document.getElementById('viewTab').classList.remove('hidden');
+                
+                // Reset edit mode ketika pindah ke view tab
+                editingLogbookNo = null;
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.textContent = 'Simpan Logbook';
+                submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                document.getElementById('cancelBtn').classList.add('hidden');
+                document.getElementById('logbookForm').reset();
+                document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+                
+                loadMyLogbook();
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            currentRole = null;
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('studentPage').classList.add('hidden');
+            document.getElementById('adminPage').classList.add('hidden');
+            document.getElementById('loginForm').reset();
+        }
+
+        // Fungsi untuk zoom gambar
+        function openImageModal(imageUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = 'block';
+            modalImg.src = imageUrl;
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        // Close modal dengan tombol ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+    </script>
+</body>
+</html>
