@@ -111,8 +111,9 @@
         }
 
         .btn-secondary {
-            background: #95a5a6;
+            background: #667eea;
             color: white;
+            font-family: 'Poppins', sans-serif;
         }
 
         .btn:disabled {
@@ -372,6 +373,115 @@
             border-bottom: 3px solid #667eea;
             margin-bottom: -2px;
         }
+
+        .profile-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .profile-card h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .profile-card p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .student-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid #667eea;
+        }
+
+        .student-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .student-card h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .student-card p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .info-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .info-item label {
+            font-size: 11px;
+            color: #999;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-item span {
+            font-size: 13px;
+            color: #333;
+            font-weight: 600;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            display: block;
+        }
+
+        .info-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .info-item {
+                padding: 12px;
+            }
+
+            .info-item label {
+                font-size: 12px;
+            }
+
+            .info-item span {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -379,7 +489,7 @@
         <!-- Login Page -->
         <div id="loginPage">
             <div class="header">
-                   <img src="eagle.png" width="60" style="vertical-align: middle;">
+                <img src="eagle.png" width="60">
                 <h1>Logbook Magang</h1>
                 <p>Sistem Pencatatan Kegiatan Magang</p>
             </div>
@@ -402,7 +512,7 @@
         <!-- Student Page -->
         <div id="studentPage" class="hidden">
             <div class="header">
-                 <img src="eagle.png" width="60" style="vertical-align: middle;">
+                <img src="eagle.png" width="60">
                 <h1>Logbook Saya</h1>
                 <p>Catat kegiatan magang harian Anda</p>
             </div>
@@ -413,11 +523,68 @@
                 </div>
 
                 <div class="tabs">
-                    <div class="tab active" onclick="showTab('add')">Tambah Logbook</div>
-                    <div class="tab" onclick="showTab('view')">Lihat Logbook</div>
+                    <div class="tab active" onclick="showStudentTab('profil')">👤 Profil</div>
+                    <div class="tab" onclick="showStudentTab('add')">➕ Tambah</div>
+                    <div class="tab" onclick="showStudentTab('view')">📋 Lihat</div>
                 </div>
 
-                <div id="addTab">
+                <!-- Tab Profil -->
+                <div id="profilTab">
+                    <div id="profilAlert"></div>
+                    <form id="profilForm">
+                        <div class="form-group">
+                            <label>Nama Lengkap <span class="required">*</span></label>
+                            <input type="text" id="namaLengkap" required placeholder="Nama lengkap">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>NIM/NIS <span class="required">*</span></label>
+                                <input type="text" id="nim" required placeholder="NIM/NIS">
+                            </div>
+                            <div class="form-group">
+                                <label>Telepon <span class="required">*</span></label>
+                                <input type="tel" id="telepon" required placeholder="Nomor telepon">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" id="email" required placeholder="Email">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tempat Magang <span class="required">*</span></label>
+                            <input type="text" id="tempatMagang" required placeholder="Nama perusahaan/instansi">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Posisi Magang <span class="required">*</span></label>
+                            <input type="text" id="posisi" required placeholder="Contoh: Web Developer, Designer">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nama Pembimbing</label>
+                            <input type="text" id="pembimbing" placeholder="Nama pembimbing di tempat magang">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Tanggal Mulai <span class="required">*</span></label>
+                                <input type="date" id="tanggalMulai" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Tanggal Selesai <span class="required">*</span></label>
+                                <input type="date" id="tanggalSelesai" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="saveProfilBtn">💾 Simpan Profil</button>
+                    </form>
+                </div>
+
+                <!-- Tab Tambah Logbook -->
+                <div id="addTab" class="hidden">
                     <div id="studentAlert"></div>
                     <form id="logbookForm">
                         <div class="form-group">
@@ -446,6 +613,7 @@
                     </form>
                 </div>
 
+                <!-- Tab Lihat Logbook -->
                 <div id="viewTab" class="hidden">
                     <div id="logbookList" class="loading">Memuat data...</div>
                 </div>
@@ -455,26 +623,44 @@
         <!-- Admin Page -->
         <div id="adminPage" class="hidden">
             <div class="header">
-                <img src="eagle.png" width="60" style="vertical-align: middle;">
+                <img src="eagle.png" width="60">
                 <h1>Dashboard Admin</h1>
                 <p>Kelola dan pantau logbook siswa</p>
             </div>
             <div class="content">
                 <div class="user-info">
-                    <span>Admin</span>
+                    <span>Administrator</span>
                     <button class="btn-secondary" onclick="logout()" style="padding: 8px 15px; width: auto; border-radius: 5px;">Keluar</button>
                 </div>
 
                 <div id="adminAlert"></div>
                 
-                <div class="form-group">
-                    <label>Pilih Siswa</label>
-                    <select id="studentSelect" onchange="loadStudentLogbook()">
-                        <option value="">-- Pilih Siswa --</option>
-                    </select>
+                <div id="studentsList"></div>
+            </div>
+        </div>
+
+        <!-- Detail Siswa (Admin) -->
+        <div id="studentDetailPage" class="hidden">
+            <div class="header">
+                <img src="eagle.png" width="60">
+                <h1 id="detailStudentName">Detail Siswa</h1>
+                <p>Profil dan Logbook</p>
+            </div>
+            <div class="content">
+                <button class="btn btn-secondary" onclick="backToAdmin()" style="margin-bottom: 20px;">← Kembali</button>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="showDetailTab('profil')">👤 Profil</div>
+                    <div class="tab" onclick="showDetailTab('logbook')">📋 Logbook</div>
                 </div>
 
-                <div id="adminLogbookList"></div>
+                <div id="detailProfilTab">
+                    <div id="studentProfileDisplay" class="loading">Memuat profil...</div>
+                </div>
+
+                <div id="detailLogbookTab" class="hidden">
+                    <div id="adminLogbookList" class="loading">Memuat logbook...</div>
+                </div>
             </div>
         </div>
     </div>
@@ -488,10 +674,11 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyIDiZvSCeJUzBufT1RqrB51vQk86gEOX0TPiJ5v-i_8z3pBJB45MwFvM3xIeXexOTbg/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWrl2F-pr6hHaG_WCJT6hcIrkj-WdiM8DSuw4Ny6e66GXjLHi1thPFZn2N4BH0VR57zQ/exec";
         let currentUser = null;
         let currentRole = null;
-        let editingLogbookNo = null; // Track logbook yang sedang diedit
+        let editingLogbookNo = null;
+        let selectedStudent = null;
 
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
@@ -499,6 +686,9 @@
             if (tanggalInput) tanggalInput.value = today;
         });
 
+        // ========================================
+        // LOGIN
+        // ========================================
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value;
@@ -520,11 +710,12 @@
                     
                     if (data.role === 'admin') {
                         document.getElementById('adminPage').classList.remove('hidden');
-                        loadStudents();
+                        loadStudentsForAdmin();
                     } else {
                         document.getElementById('studentPage').classList.remove('hidden');
                         document.getElementById('studentName').textContent = data.nama;
-                        loadMyLogbook();
+                        loadProfile();
+                        showStudentTab('profil');
                     }
                 } else {
                     showAlert('loginAlert', data.message, 'error');
@@ -537,6 +728,76 @@
             loginBtn.textContent = 'Masuk';
         });
 
+        // ========================================
+        // PROFIL
+        // ========================================
+        async function loadProfile() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getProfile&username=${currentUser}`);
+                const data = await response.json();
+
+                if (data.success && data.profile) {
+                    const p = data.profile;
+                    document.getElementById('namaLengkap').value = p.namaLengkap || '';
+                    document.getElementById('nim').value = p.nim || '';
+                    document.getElementById('email').value = p.email || '';
+                    document.getElementById('telepon').value = p.telepon || '';
+                    document.getElementById('tempatMagang').value = p.tempatMagang || '';
+                    document.getElementById('posisi').value = p.posisi || '';
+                    document.getElementById('pembimbing').value = p.pembimbing || '';
+                    document.getElementById('tanggalMulai').value = convertDateToInput(p.tanggalMulai) || '';
+                    document.getElementById('tanggalSelesai').value = convertDateToInput(p.tanggalSelesai) || '';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        document.getElementById('profilForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const saveBtn = document.getElementById('saveProfilBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = '💾 Menyimpan...';
+
+            try {
+                const payload = {
+                    action: 'saveProfile',
+                    username: currentUser,
+                    namaLengkap: document.getElementById('namaLengkap').value,
+                    nim: document.getElementById('nim').value,
+                    email: document.getElementById('email').value,
+                    telepon: document.getElementById('telepon').value,
+                    tempatMagang: document.getElementById('tempatMagang').value,
+                    posisi: document.getElementById('posisi').value,
+                    pembimbing: document.getElementById('pembimbing').value,
+                    tanggalMulai: document.getElementById('tanggalMulai').value,
+                    tanggalSelesai: document.getElementById('tanggalSelesai').value
+                };
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('profilAlert', '✅ Profil berhasil disimpan!', 'success');
+                } else {
+                    showAlert('profilAlert', '❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('profilAlert', '❌ Gagal menyimpan: ' + error.message, 'error');
+            }
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 Simpan Profil';
+        });
+
+        // ========================================
+        // LOGBOOK
+        // ========================================
         document.getElementById('logbookForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -557,7 +818,6 @@
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 
-                // Validasi ukuran file (max 2MB)
                 if (file.size > 2 * 1024 * 1024) {
                     showAlert('studentAlert', '⚠️ Ukuran file maksimal 2MB!', 'error');
                     submitBtn.disabled = false;
@@ -607,11 +867,7 @@
                     document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
                     editingLogbookNo = null;
                     submitBtn.textContent = 'Simpan Logbook';
-                    
-                    // Hide cancel button
                     document.getElementById('cancelBtn').classList.add('hidden');
-                    
-                    // Refresh list di tab view
                     loadMyLogbook();
                 } else {
                     showAlert('studentAlert', '❌ ' + data.message, 'error');
@@ -627,78 +883,6 @@
             }
         });
 
-        async function loadStudents() {
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getStudents`);
-                const data = await response.json();
-                
-                const select = document.getElementById('studentSelect');
-                select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-                
-                data.students.forEach(student => {
-                    const option = document.createElement('option');
-                    option.value = student.username;
-                    option.textContent = student.nama;
-                    select.appendChild(option);
-                });
-            } catch (error) {
-                showAlert('adminAlert', 'Gagal memuat siswa', 'error');
-            }
-        }
-
-        async function loadStudentLogbook() {
-            const username = document.getElementById('studentSelect').value;
-            const listDiv = document.getElementById('adminLogbookList');
-            
-            if (!username) {
-                listDiv.innerHTML = '';
-                return;
-            }
-
-            listDiv.innerHTML = '<div class="loading">Memuat data...</div>';
-
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getLogbook&username=${username}`);
-                const data = await response.json();
-
-                if (data.success && data.logbook.length > 0) {
-                    listDiv.innerHTML = data.logbook.map(log => {
-                        let imageHtml = '';
-                        
-                        // Jika ada file ID, tampilkan preview gambar
-                        if (log.fileId) {
-                            const thumbnailUrl = `https://drive.google.com/thumbnail?id=${log.fileId}&sz=w400`;
-                            imageHtml = `
-                                <div class="logbook-image">
-                                    <img src="${thumbnailUrl}" 
-                                         alt="Foto kegiatan" 
-                                         onclick="window.open('${log.berkas}', '_blank')"
-                                         onerror="this.parentElement.innerHTML='<div class=image-placeholder>📷 Foto tidak dapat dimuat</div>'">
-                                </div>
-                            `;
-                        } else if (log.berkas && log.berkas.includes('drive.google.com')) {
-                            // Fallback untuk data lama tanpa fileId
-                            imageHtml = `<a href="${log.berkas}" target="_blank" class="file-link">📷 Lihat Foto</a>`;
-                        }
-                        
-                        return `
-                            <div class="logbook-item">
-                                <h3>${log.judul}</h3>
-                                <p>${log.deskripsi}</p>
-                                <p class="date">📅 ${log.tanggal}</p>
-                                ${imageHtml}
-                            </div>
-                        `;
-                    }).join('');
-                } else {
-                    listDiv.innerHTML = '<div class="alert alert-info">Belum ada logbook untuk siswa ini.</div>';
-                }
-            } catch (error) {
-                console.error('Error loading student logbook:', error);
-                listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat logbook.</div>';
-            }
-        }
-
         async function loadMyLogbook() {
             const listDiv = document.getElementById('logbookList');
             
@@ -710,7 +894,6 @@
                     listDiv.innerHTML = data.logbook.map(log => {
                         let imageHtml = '';
                         
-                        // Jika ada file ID, tampilkan preview gambar
                         if (log.fileId) {
                             const thumbnailUrl = `https://drive.google.com/thumbnail?id=${log.fileId}&sz=w400`;
                             const fullImageUrl = `https://drive.google.com/uc?id=${log.fileId}`;
@@ -723,7 +906,6 @@
                                 </div>
                             `;
                         } else if (log.berkas && log.berkas.includes('drive.google.com')) {
-                            // Fallback untuk data lama tanpa fileId
                             imageHtml = `<a href="${log.berkas}" target="_blank" class="file-link">📷 Lihat Foto</a>`;
                         }
                         
@@ -749,20 +931,16 @@
             }
         }
 
-        // Fungsi untuk edit logbook
         function editLogbook(no, tanggal, judul, deskripsi) {
             editingLogbookNo = no;
             
-            // Konversi tanggal dari dd/MM/yyyy ke yyyy-MM-dd
             const dateParts = tanggal.split('/');
             const formattedDate = dateParts.length === 3 ? `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}` : tanggal;
             
-            // Isi form dengan data yang akan diedit
             document.getElementById('tanggal').value = formattedDate;
             document.getElementById('judul').value = judul;
             document.getElementById('deskripsi').value = deskripsi;
             
-            // Update tombol submit dan tampilkan tombol cancel
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.textContent = 'Update Logbook';
             submitBtn.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
@@ -770,41 +948,27 @@
             const cancelBtn = document.getElementById('cancelBtn');
             cancelBtn.classList.remove('hidden');
             
-            // Pindah ke tab tambah logbook
-            showTab('add');
-            
-            // Scroll ke atas
+            showStudentTab('add');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            
             showAlert('studentAlert', '📝 Mode edit: Ubah data dan klik "Update Logbook"', 'info');
         }
 
-        // Fungsi untuk cancel edit
         function cancelEdit() {
             editingLogbookNo = null;
-            
-            // Reset form
             document.getElementById('logbookForm').reset();
             document.getElementById('fileName').textContent = '';
             document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
             
-            // Reset tombol
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.textContent = 'Simpan Logbook';
             submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
             
-            const cancelBtn = document.getElementById('cancelBtn');
-            cancelBtn.classList.add('hidden');
-            
-            // Clear alert
+            document.getElementById('cancelBtn').classList.add('hidden');
             document.getElementById('studentAlert').innerHTML = '';
         }
 
-        // Fungsi untuk hapus logbook
         async function deleteLogbook(no) {
-            if (!confirm('Apakah Anda yakin ingin menghapus logbook ini?')) {
-                return;
-            }
+            if (!confirm('Apakah Anda yakin ingin menghapus logbook ini?')) return;
             
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=deleteLogbook&username=${currentUser}&no=${no}`);
@@ -821,18 +985,202 @@
             }
         }
 
-        // Helper function untuk escape HTML
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;',
-                '\n': ' ',
-                '\r': ''
-            };
-            return text.replace(/[&<>"'\n\r]/g, m => map[m]);
+        // ========================================
+        // ADMIN FUNCTIONS
+        // ========================================
+        async function loadStudentsForAdmin() {
+            const listDiv = document.getElementById('studentsList');
+            listDiv.innerHTML = '<div class="loading">Memuat daftar siswa...</div>';
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getStudents`);
+                const data = await response.json();
+                
+                if (data.success && data.students.length > 0) {
+                    listDiv.innerHTML = data.students.map(student => `
+                        <div class="student-card" onclick="viewStudentDetail('${student.username}', '${student.nama}')">
+                            <h3>👤 ${student.nama}</h3>
+                            <p>Username: ${student.username}</p>
+                            <p style="font-size: 12px; margin-top: 8px; color: #667eea;">Klik untuk melihat detail →</p>
+                        </div>
+                    `).join('');
+                } else {
+                    listDiv.innerHTML = '<div class="alert alert-info">Belum ada siswa terdaftar.</div>';
+                }
+            } catch (error) {
+                listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat daftar siswa.</div>';
+            }
+        }
+
+        async function viewStudentDetail(username, nama) {
+            selectedStudent = username;
+            document.getElementById('detailStudentName').textContent = nama;
+            
+            document.getElementById('adminPage').classList.add('hidden');
+            document.getElementById('studentDetailPage').classList.remove('hidden');
+            
+            showDetailTab('profil');
+        }
+
+        function backToAdmin() {
+            document.getElementById('studentDetailPage').classList.add('hidden');
+            document.getElementById('adminPage').classList.remove('hidden');
+            selectedStudent = null;
+        }
+
+        async function showDetailTab(tab) {
+            document.querySelectorAll('#studentDetailPage .tab').forEach(t => t.classList.remove('active'));
+            
+            if (tab === 'profil') {
+                document.querySelectorAll('#studentDetailPage .tab')[0].classList.add('active');
+                document.getElementById('detailProfilTab').classList.remove('hidden');
+                document.getElementById('detailLogbookTab').classList.add('hidden');
+                await loadStudentProfile(selectedStudent);
+            } else {
+                document.querySelectorAll('#studentDetailPage .tab')[1].classList.add('active');
+                document.getElementById('detailProfilTab').classList.add('hidden');
+                document.getElementById('detailLogbookTab').classList.remove('hidden');
+                await loadStudentLogbook(selectedStudent);
+            }
+        }
+
+        async function loadStudentProfile(username) {
+            const displayDiv = document.getElementById('studentProfileDisplay');
+            displayDiv.innerHTML = '<div class="loading">Memuat profil...</div>';
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getProfile&username=${username}`);
+                const data = await response.json();
+                
+                if (data.success && data.profile) {
+                    const p = data.profile;
+                    const hasData = p.namaLengkap || p.tempatMagang;
+                    
+                    if (!hasData) {
+                        displayDiv.innerHTML = '<div class="alert alert-info">Siswa belum melengkapi profil.</div>';
+                        return;
+                    }
+                    
+                    displayDiv.innerHTML = `
+                        <div class="profile-card">
+                            <h2>${p.namaLengkap || '-'}</h2>
+                            <p>${p.nim || '-'}</p>
+                        </div>
+                        
+                        <div class="info-grid">
+                            <div class="info-item full-width">
+                                <label>Email</label>
+                                <span>${p.email || '-'}</span>
+                            </div>
+                            <div class="info-item full-width">
+                                <label>Telepon</label>
+                                <span>${p.telepon || '-'}</span>
+                            </div>
+                            <div class="info-item full-width">
+                                <label>Tempat Magang</label>
+                                <span>${p.tempatMagang || '-'}</span>
+                            </div>
+                            <div class="info-item full-width">
+                                <label>Posisi</label>
+                                <span>${p.posisi || '-'}</span>
+                            </div>
+                            <div class="info-item full-width">
+                                <label>Pembimbing</label>
+                                <span>${p.pembimbing || '-'}</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Tanggal Mulai</label>
+                                <span>${p.tanggalMulai || '-'}</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Tanggal Selesai</label>
+                                <span>${p.tanggalSelesai || '-'}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                displayDiv.innerHTML = '<div class="alert alert-error">Gagal memuat profil.</div>';
+            }
+        }
+
+        async function loadStudentLogbook(username) {
+            const listDiv = document.getElementById('adminLogbookList');
+            listDiv.innerHTML = '<div class="loading">Memuat logbook...</div>';
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getLogbook&username=${username}`);
+                const data = await response.json();
+
+                if (data.success && data.logbook.length > 0) {
+                    listDiv.innerHTML = data.logbook.map(log => {
+                        let imageHtml = '';
+                        
+                        if (log.fileId) {
+                            const thumbnailUrl = `https://drive.google.com/thumbnail?id=${log.fileId}&sz=w400`;
+                            imageHtml = `
+                                <div class="logbook-image">
+                                    <img src="${thumbnailUrl}" 
+                                         alt="Foto kegiatan" 
+                                         onclick="window.open('https://drive.google.com/file/d/${log.fileId}/view', '_blank')"
+                                         onerror="this.parentElement.innerHTML='<div class=image-placeholder>📷 Foto tidak dapat dimuat</div>'">
+                                </div>
+                            `;
+                        } else if (log.berkas && log.berkas.includes('drive.google.com')) {
+                            imageHtml = `<a href="${log.berkas}" target="_blank" class="file-link">📷 Lihat Foto</a>`;
+                        }
+                        
+                        return `
+                            <div class="logbook-item">
+                                <h3>${log.judul}</h3>
+                                <p>${log.deskripsi}</p>
+                                <p class="date">📅 ${log.tanggal}</p>
+                                ${imageHtml}
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    listDiv.innerHTML = '<div class="alert alert-info">Belum ada logbook untuk siswa ini.</div>';
+                }
+            } catch (error) {
+                console.error('Error loading student logbook:', error);
+                listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat logbook.</div>';
+            }
+        }
+
+        // ========================================
+        // HELPER FUNCTIONS
+        // ========================================
+        function showStudentTab(tab) {
+            document.querySelectorAll('#studentPage .tab').forEach(t => t.classList.remove('active'));
+            
+            const tabs = document.querySelectorAll('#studentPage .tab');
+            if (tab === 'profil') {
+                tabs[0].classList.add('active');
+                document.getElementById('profilTab').classList.remove('hidden');
+                document.getElementById('addTab').classList.add('hidden');
+                document.getElementById('viewTab').classList.add('hidden');
+            } else if (tab === 'add') {
+                tabs[1].classList.add('active');
+                document.getElementById('profilTab').classList.add('hidden');
+                document.getElementById('addTab').classList.remove('hidden');
+                document.getElementById('viewTab').classList.add('hidden');
+            } else {
+                tabs[2].classList.add('active');
+                document.getElementById('profilTab').classList.add('hidden');
+                document.getElementById('addTab').classList.add('hidden');
+                document.getElementById('viewTab').classList.remove('hidden');
+                
+                editingLogbookNo = null;
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.textContent = 'Simpan Logbook';
+                submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                document.getElementById('cancelBtn').classList.add('hidden');
+                document.getElementById('logbookForm').reset();
+                document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+                
+                loadMyLogbook();
+            }
         }
 
         function showAlert(elementId, message, type) {
@@ -850,48 +1198,44 @@
             });
         }
 
+        function convertDateToInput(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+            return dateStr;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;',
+                '\n': ' ',
+                '\r': ''
+            };
+            return text.replace(/[&<>"'\n\r]/g, m => map[m]);
+        }
+
         document.getElementById('fileInput').addEventListener('change', function() {
             const fileName = this.files[0] ? this.files[0].name : '';
             document.getElementById('fileName').textContent = fileName ? `✓ ${fileName}` : '';
         });
 
-        function showTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            
-            // Find and activate the correct tab
-            const tabs = document.querySelectorAll('.tab');
-            if (tab === 'add') {
-                tabs[0].classList.add('active');
-                document.getElementById('addTab').classList.remove('hidden');
-                document.getElementById('viewTab').classList.add('hidden');
-            } else {
-                tabs[1].classList.add('active');
-                document.getElementById('addTab').classList.add('hidden');
-                document.getElementById('viewTab').classList.remove('hidden');
-                
-                // Reset edit mode ketika pindah ke view tab
-                editingLogbookNo = null;
-                const submitBtn = document.getElementById('submitBtn');
-                submitBtn.textContent = 'Simpan Logbook';
-                submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-                document.getElementById('cancelBtn').classList.add('hidden');
-                document.getElementById('logbookForm').reset();
-                document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-                
-                loadMyLogbook();
-            }
-        }
-
         function logout() {
             currentUser = null;
             currentRole = null;
+            selectedStudent = null;
             document.getElementById('loginPage').classList.remove('hidden');
             document.getElementById('studentPage').classList.add('hidden');
             document.getElementById('adminPage').classList.add('hidden');
+            document.getElementById('studentDetailPage').classList.add('hidden');
             document.getElementById('loginForm').reset();
         }
 
-        // Fungsi untuk zoom gambar
         function openImageModal(imageUrl) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
@@ -903,7 +1247,6 @@
             document.getElementById('imageModal').style.display = 'none';
         }
 
-        // Close modal dengan tombol ESC
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeImageModal();
