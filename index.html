@@ -111,7 +111,7 @@
         }
 
         .btn-secondary {
-            background: #ff3131;
+            background: #667eea;
             color: white;
             font-family: 'Poppins', sans-serif;
         }
@@ -333,6 +333,7 @@
             border-radius: 10px;
             padding: 20px;
             text-align: center;
+            cursor: pointer;
             transition: all 0.3s;
         }
 
@@ -345,98 +346,10 @@
             display: none;
         }
 
-        .upload-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        .upload-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .upload-btn-camera {
-            background: #667eea;
-            color: white;
-        }
-
-        .upload-btn-gallery {
-            background: #3498db;
-            color: white;
-        }
-
-        .upload-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-        }
-
         .file-name {
             margin-top: 10px;
             font-size: 14px;
             color: #667eea;
-        }
-
-        .camera-modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.95);
-        }
-
-        .camera-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 500px;
-        }
-
-        #cameraVideo {
-            width: 100%;
-            border-radius: 10px;
-            background: #000;
-        }
-
-        .camera-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .camera-btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .camera-btn-capture {
-            background: #667eea;
-            color: white;
-        }
-
-        .camera-btn-close {
-            background: #e74c3c;
-            color: white;
         }
 
         .tabs {
@@ -484,24 +397,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-        }
-
-        .checkbox-group {
-            margin: 15px 0;
-        }
-
-        .checkbox-group label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            width: auto;
-            cursor: pointer;
         }
 
         @media (max-width: 600px) {
@@ -569,24 +464,6 @@
             grid-column: 1 / -1;
         }
 
-        .checkbox-group {
-            margin: 15px 0;
-        }
-
-        .checkbox-group label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            width: auto;
-            cursor: pointer;
-        }
-
         @media (max-width: 600px) {
             .info-grid {
                 grid-template-columns: 1fr;
@@ -627,10 +504,10 @@
                         <label>Password <span class="required">*</span></label>
                         <input type="password" id="password" required placeholder="Masukkan password">
                     </div>
-                    <div class="checkbox-group">
-                        <label>
-                            <input type="checkbox" id="rememberMe">
-                            Ingat saya
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label style="display: flex; align-items: center; cursor: pointer; font-weight: normal;">
+                        <input type="checkbox" id="rememberMe" style="width: auto; margin-right: 8px;">
+                        <span style="font-size: 14px;">Ingat saya</span>
                         </label>
                     </div>
                     <button type="submit" class="btn btn-primary" id="loginBtn">Masuk</button>
@@ -668,8 +545,8 @@
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label>No Absen <span class="required">*</span></label>
-                                <input type="text" id="noAbsen" required placeholder="Nomor absen">
+                                <label>NIM/NIS <span class="required">*</span></label>
+                                <input type="text" id="nim" required placeholder="NIM/NIS">
                             </div>
                             <div class="form-group">
                                 <label>Telepon <span class="required">*</span></label>
@@ -685,11 +562,6 @@
                         <div class="form-group">
                             <label>Tempat Magang <span class="required">*</span></label>
                             <input type="text" id="tempatMagang" required placeholder="Nama perusahaan/instansi">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Alamat Tempat Magang <span class="required">*</span></label>
-                            <textarea id="alamatMagang" required placeholder="Alamat lengkap tempat magang" style="min-height: 80px;"></textarea>
                         </div>
 
                         <div class="form-group">
@@ -735,17 +607,9 @@
                         </div>
                         <div class="form-group">
                             <label>Upload Foto (Opsional)</label>
-                            <div class="file-upload">
-                                <p>📷 Pilih cara upload foto</p>
-                                <p style="font-size: 12px; color: #999; margin-bottom: 10px;">Foto akan otomatis dikompres (max 2MB)</p>
-                                <div class="upload-buttons">
-                                    <button type="button" class="upload-btn upload-btn-camera" onclick="openCamera()">
-                                        📸 Kamera
-                                    </button>
-                                    <button type="button" class="upload-btn upload-btn-gallery" onclick="document.getElementById('fileInput').click()">
-                                        🖼️ Galeri
-                                    </button>
-                                </div>
+                            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                                <p>📷 Klik untuk upload foto</p>
+                                <p style="font-size: 12px; color: #999;">Max: 2MB</p>
                                 <input type="file" id="fileInput" accept="image/*">
                                 <div id="fileName" class="file-name"></div>
                             </div>
@@ -815,166 +679,585 @@
         </div>
     </div>
 
-    <!-- Modal Kamera -->
-    <div id="cameraModal" class="camera-modal">
-        <div class="camera-container">
-            <video id="cameraVideo" autoplay playsinline></video>
-            <div class="camera-controls">
-                <button class="camera-btn camera-btn-capture" onclick="capturePhoto()">📸 Ambil Foto</button>
-                <button class="camera-btn camera-btn-close" onclick="closeCamera()">❌ Tutup</button>
-            </div>
-        </div>
-    </div>
-
-    <canvas id="photoCanvas" style="display:none;"></canvas>
-
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWrl2F-pr6hHaG_WCJT6hcIrkj-WdiM8DSuw4Ny6e66GXjLHi1thPFZn2N4BH0VR57zQ/exec";
         let currentUser = null;
         let currentRole = null;
         let editingLogbookNo = null;
         let selectedStudent = null;
-        let cameraStream = null;
 
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             const tanggalInput = document.getElementById('tanggal');
             if (tanggalInput) tanggalInput.value = today;
-            
-            // Check saved login
-            checkSavedLogin();
-            
-            // Setup login form
-            setupLoginForm();
         });
 
-        function setupLoginForm() {
-            const loginForm = document.getElementById('loginForm');
-            if (!loginForm) {
-                console.error('Login form not found!');
-                return;
-            }
+        // ========================================
+        // LOGIN
+        // ========================================
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
             
-            console.log('Login form setup complete');
-            
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                console.log('Form submitted!'); // Debug
-                
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                const rememberMe = document.getElementById('rememberMe').checked;
-                const loginBtn = document.getElementById('loginBtn');
-                
-                console.log('Username:', username, 'Password:', password); // Debug
-                
-                loginBtn.disabled = true;
-                loginBtn.textContent = 'Memproses...';
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Memproses...';
 
-                try {
-                    const url = `${SCRIPT_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
-                    console.log('Fetching:', url); // Debug
-                    
-                    const response = await fetch(url);
-                    console.log('Response status:', response.status); // Debug
-                    
-                    const data = await response.json();
-                    console.log('Login response:', data); // Debug
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=login&username=${username}&password=${password}`);
+                const data = await response.json();
 
-                    if (data.success) {
-                        currentUser = data.user;
-                        currentRole = data.role;
-                        
-                        // Save login info if remember me is checked
-                        saveLoginInfo(data.user, data.role, data.nama, rememberMe);
-                        
-                        document.getElementById('loginPage').classList.add('hidden');
-                        
-                        if (data.role === 'admin') {
-                            document.getElementById('adminPage').classList.remove('hidden');
-                            loadStudentsForAdmin();
-                        } else {
-                            document.getElementById('studentPage').classList.remove('hidden');
-                            document.getElementById('studentName').textContent = data.nama;
-                            loadProfile();
-                            showStudentTab('profil');
-                        }
+                if (data.success) {
+                    currentUser = data.user;
+                    currentRole = data.role;
+                    
+                    document.getElementById('loginPage').classList.add('hidden');
+                    
+                    if (data.role === 'admin') {
+                        document.getElementById('adminPage').classList.remove('hidden');
+                        loadStudentsForAdmin();
                     } else {
-                        showAlert('loginAlert', data.message, 'error');
+                        document.getElementById('studentPage').classList.remove('hidden');
+                        document.getElementById('studentName').textContent = data.nama;
+                        loadProfile();
+                        showStudentTab('profil');
                     }
-                } catch (error) {
-                    console.error('Login error:', error); // Debug log
-                    showAlert('loginAlert', 'Gagal login: ' + error.message, 'error');
+                } else {
+                    showAlert('loginAlert', data.message, 'error');
                 }
+            } catch (error) {
+                showAlert('loginAlert', 'Gagal login: ' + error.message, 'error');
+            }
 
-                loginBtn.disabled = false;
-                loginBtn.textContent = 'Masuk';
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Masuk';
+        });
+
+        // ========================================
+        // PROFIL
+        // ========================================
+        async function loadProfile() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getProfile&username=${currentUser}`);
+                const data = await response.json();
+
+                if (data.success && data.profile) {
+                    const p = data.profile;
+                    document.getElementById('namaLengkap').value = p.namaLengkap || '';
+                    document.getElementById('nim').value = p.nim || '';
+                    document.getElementById('email').value = p.email || '';
+                    document.getElementById('telepon').value = p.telepon || '';
+                    document.getElementById('tempatMagang').value = p.tempatMagang || '';
+                    document.getElementById('posisi').value = p.posisi || '';
+                    document.getElementById('pembimbing').value = p.pembimbing || '';
+                    document.getElementById('tanggalMulai').value = convertDateToInput(p.tanggalMulai) || '';
+                    document.getElementById('tanggalSelesai').value = convertDateToInput(p.tanggalSelesai) || '';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        document.getElementById('profilForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const saveBtn = document.getElementById('saveProfilBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = '💾 Menyimpan...';
+
+            try {
+                const payload = {
+                    action: 'saveProfile',
+                    username: currentUser,
+                    namaLengkap: document.getElementById('namaLengkap').value,
+                    nim: document.getElementById('nim').value,
+                    email: document.getElementById('email').value,
+                    telepon: document.getElementById('telepon').value,
+                    tempatMagang: document.getElementById('tempatMagang').value,
+                    posisi: document.getElementById('posisi').value,
+                    pembimbing: document.getElementById('pembimbing').value,
+                    tanggalMulai: document.getElementById('tanggalMulai').value,
+                    tanggalSelesai: document.getElementById('tanggalSelesai').value
+                };
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('profilAlert', '✅ Profil berhasil disimpan!', 'success');
+                } else {
+                    showAlert('profilAlert', '❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('profilAlert', '❌ Gagal menyimpan: ' + error.message, 'error');
+            }
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 Simpan Profil';
+        });
+
+        // ========================================
+        // LOGBOOK
+        // ========================================
+        document.getElementById('logbookForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            
+            const isEditing = editingLogbookNo !== null;
+            submitBtn.textContent = isEditing ? 'Mengupdate...' : 'Menyimpan...';
+
+            const tanggal = document.getElementById('tanggal').value;
+            const judul = document.getElementById('judul').value;
+            const deskripsi = document.getElementById('deskripsi').value;
+            const fileInput = document.getElementById('fileInput');
+            
+            let fileData = '';
+            let fileName = '';
+            
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                
+                if (file.size > 2 * 1024 * 1024) {
+                    showAlert('studentAlert', '⚠️ Ukuran file maksimal 2MB!', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = isEditing ? 'Update Logbook' : 'Simpan Logbook';
+                    return;
+                }
+                
+                fileName = file.name;
+                
+                try {
+                    fileData = await convertToBase64(file);
+                } catch (error) {
+                    console.error('Error converting file:', error);
+                    showAlert('studentAlert', '⚠️ Gagal memproses gambar', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = isEditing ? 'Update Logbook' : 'Simpan Logbook';
+                    return;
+                }
+            }
+
+            try {
+                const payload = {
+                    action: isEditing ? 'updateLogbook' : 'addLogbook',
+                    username: currentUser,
+                    tanggal: tanggal,
+                    judul: judul,
+                    deskripsi: deskripsi,
+                    fileData: fileData,
+                    fileName: fileName
+                };
+                
+                if (isEditing) {
+                    payload.no = editingLogbookNo;
+                }
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('studentAlert', isEditing ? '✅ Logbook berhasil diupdate!' : '✅ Logbook berhasil disimpan!', 'success');
+                    document.getElementById('logbookForm').reset();
+                    document.getElementById('fileName').textContent = '';
+                    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+                    editingLogbookNo = null;
+                    submitBtn.textContent = 'Simpan Logbook';
+                    document.getElementById('cancelBtn').classList.add('hidden');
+                    loadMyLogbook();
+                } else {
+                    showAlert('studentAlert', '❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('studentAlert', '❌ Gagal menyimpan: ' + error.message, 'error');
+            }
+
+            submitBtn.disabled = false;
+            if (!isEditing) {
+                submitBtn.textContent = 'Simpan Logbook';
+            }
+        });
+
+        async function loadMyLogbook() {
+            const listDiv = document.getElementById('logbookList');
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getLogbook&username=${currentUser}`);
+                const data = await response.json();
+
+                if (data.success && data.logbook.length > 0) {
+                    listDiv.innerHTML = data.logbook.map(log => {
+                        let imageHtml = '';
+                        
+                        if (log.fileId) {
+                            const thumbnailUrl = `https://drive.google.com/thumbnail?id=${log.fileId}&sz=w400`;
+                            const fullImageUrl = `https://drive.google.com/uc?id=${log.fileId}`;
+                            imageHtml = `
+                                <div class="logbook-image">
+                                    <img src="${thumbnailUrl}" 
+                                         alt="Foto kegiatan" 
+                                         onclick="openImageModal('${fullImageUrl}')"
+                                         onerror="this.parentElement.innerHTML='<div class=image-placeholder>📷 Foto tidak dapat dimuat</div>'">
+                                </div>
+                            `;
+                        } else if (log.berkas && log.berkas.includes('drive.google.com')) {
+                            imageHtml = `<a href="${log.berkas}" target="_blank" class="file-link">📷 Lihat Foto</a>`;
+                        }
+                        
+                        return `
+                            <div class="logbook-item">
+                                <div class="logbook-actions">
+                                    <button class="btn-action btn-edit" onclick="editLogbook(${log.no}, '${escapeHtml(log.tanggal)}', '${escapeHtml(log.judul)}', '${escapeHtml(log.deskripsi)}')">✏️ Edit</button>
+                                    <button class="btn-action btn-delete" onclick="deleteLogbook(${log.no})">🗑️ Hapus</button>
+                                </div>
+                                <h3>${log.judul}</h3>
+                                <p>${log.deskripsi}</p>
+                                <p class="date">📅 ${log.tanggal}</p>
+                                ${imageHtml}
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    listDiv.innerHTML = '<div class="alert alert-info">Belum ada logbook. Mulai tambahkan kegiatan Anda!</div>';
+                }
+            } catch (error) {
+                console.error('Error loading logbook:', error);
+                listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat logbook.</div>';
+            }
+        }
+
+        function editLogbook(no, tanggal, judul, deskripsi) {
+            editingLogbookNo = no;
+            
+            const dateParts = tanggal.split('/');
+            const formattedDate = dateParts.length === 3 ? `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}` : tanggal;
+            
+            document.getElementById('tanggal').value = formattedDate;
+            document.getElementById('judul').value = judul;
+            document.getElementById('deskripsi').value = deskripsi;
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.textContent = 'Update Logbook';
+            submitBtn.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
+            
+            const cancelBtn = document.getElementById('cancelBtn');
+            cancelBtn.classList.remove('hidden');
+            
+            showStudentTab('add');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showAlert('studentAlert', '📝 Mode edit: Ubah data dan klik "Update Logbook"', 'info');
+        }
+
+        function cancelEdit() {
+            editingLogbookNo = null;
+            document.getElementById('logbookForm').reset();
+            document.getElementById('fileName').textContent = '';
+            document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.textContent = 'Simpan Logbook';
+            submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            
+            document.getElementById('cancelBtn').classList.add('hidden');
+            document.getElementById('studentAlert').innerHTML = '';
+        }
+
+        async function deleteLogbook(no) {
+            if (!confirm('Apakah Anda yakin ingin menghapus logbook ini?')) return;
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=deleteLogbook&username=${currentUser}&no=${no}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('studentAlert', '✅ Logbook berhasil dihapus!', 'success');
+                    loadMyLogbook();
+                } else {
+                    showAlert('studentAlert', '❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                showAlert('studentAlert', '❌ Gagal menghapus: ' + error.message, 'error');
+            }
+        }
+
+        // ========================================
+        // ADMIN FUNCTIONS
+        // ========================================
+        async function loadStudentsForAdmin() {
+            const listDiv = document.getElementById('studentsList');
+            listDiv.innerHTML = '<div class="loading">Memuat daftar siswa...</div>';
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getStudents`);
+                const data = await response.json();
+                
+                if (data.success && data.students.length > 0) {
+                    listDiv.innerHTML = data.students.map(student => `
+                        <div class="student-card" onclick="viewStudentDetail('${student.username}', '${student.nama}')">
+                            <h3>👤 ${student.nama}</h3>
+                            <p>Username: ${student.username}</p>
+                            <p style="font-size: 12px; margin-top: 8px; color: #667eea;">Klik untuk melihat detail →</p>
+                        </div>
+                    `).join('');
+                } else {
+                    listDiv.innerHTML = '<div class="alert alert-info">Belum ada siswa terdaftar.</div>';
+                }
+            } catch (error) {
+                listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat daftar siswa.</div>';
+            }
+        }
+
+        async function viewStudentDetail(username, nama) {
+            selectedStudent = username;
+            document.getElementById('detailStudentName').textContent = nama;
+            
+            document.getElementById('adminPage').classList.add('hidden');
+            document.getElementById('studentDetailPage').classList.remove('hidden');
+            
+            showDetailTab('profil');
+        }
+
+        function backToAdmin() {
+            document.getElementById('studentDetailPage').classList.add('hidden');
+            document.getElementById('adminPage').classList.remove('hidden');
+            selectedStudent = null;
+        }
+
+        async function showDetailTab(tab) {
+            document.querySelectorAll('#studentDetailPage .tab').forEach(t => t.classList.remove('active'));
+            
+            if (tab === 'profil') {
+                document.querySelectorAll('#studentDetailPage .tab')[0].classList.add('active');
+                document.getElementById('detailProfilTab').classList.remove('hidden');
+                document.getElementById('detailLogbookTab').classList.add('hidden');
+                await loadStudentProfile(selectedStudent);
+            } else {
+                document.querySelectorAll('#studentDetailPage .tab')[1].classList.add('active');
+                document.getElementById('detailProfilTab').classList.add('hidden');
+                document.getElementById('detailLogbookTab').classList.remove('hidden');
+                await loadStudentLogbook(selectedStudent);
+            }
+        }
+
+        async function loadStudentProfile(username) {
+            const displayDiv = document.getElementById('studentProfileDisplay');
+            displayDiv.innerHTML = '<div class="loading">Memuat profil...</div>';
+            
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getProfile&username=${username}`);
+                const data = await response.json();
+                
+                if (data.success && data.profile) {
+                    const p = data.profile;
+                    const hasData = p.namaLengkap || p.tempatMagang;
+                    
+                    if (!hasData) {
+                        displayDiv.innerHTML = '<div class="alert alert-info">Siswa belum melengkapi profil.</div>';
+                        return;
+                    }
+                    
+                    displayDiv.innerHTML = `
+                        <div class="profile-card">
+                            <h2>${p.namaLengkap || '-'}</h2>
+                            <p>${p.nim || '-'}</p>
+                        </div>
+                        
+                        <div class="info-grid">
+                            <div class="info-item full-width">
+                                <label>Email</label>
+                                <span>${p.email || '-'}</span>
+                            </div>
+                            <div class="info-item full-width">
+                                <label>Telepon</label>
+                                <span>${p.telepon || '-'}</span>
+                            </div>
+                            <div class="info-item full-width">
+                                <label>Tempat Magang</label>
+                                <span>${p.tempatMagang || '-'}</span>
+                            </div>
+                            <div class="info-item full-width">
+                                <label>Posisi</label>
+                                <span>${p.posisi || '-'}</span>
+                            </div>
+                            <div class="info-item full-width">
+                                <label>Pembimbing</label>
+                                <span>${p.pembimbing || '-'}</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Tanggal Mulai</label>
+                                <span>${p.tanggalMulai || '-'}</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Tanggal Selesai</label>
+                                <span>${p.tanggalSelesai || '-'}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                displayDiv.innerHTML = '<div class="alert alert-error">Gagal memuat profil.</div>';
+            }
+        }
+
+        async function loadStudentLogbook(username) {
+            const listDiv = document.getElementById('adminLogbookList');
+            listDiv.innerHTML = '<div class="loading">Memuat logbook...</div>';
+
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getLogbook&username=${username}`);
+                const data = await response.json();
+
+                if (data.success && data.logbook.length > 0) {
+                    listDiv.innerHTML = data.logbook.map(log => {
+                        let imageHtml = '';
+                        
+                        if (log.fileId) {
+                            const thumbnailUrl = `https://drive.google.com/thumbnail?id=${log.fileId}&sz=w400`;
+                            imageHtml = `
+                                <div class="logbook-image">
+                                    <img src="${thumbnailUrl}" 
+                                         alt="Foto kegiatan" 
+                                         onclick="window.open('https://drive.google.com/file/d/${log.fileId}/view', '_blank')"
+                                         onerror="this.parentElement.innerHTML='<div class=image-placeholder>📷 Foto tidak dapat dimuat</div>'">
+                                </div>
+                            `;
+                        } else if (log.berkas && log.berkas.includes('drive.google.com')) {
+                            imageHtml = `<a href="${log.berkas}" target="_blank" class="file-link">📷 Lihat Foto</a>`;
+                        }
+                        
+                        return `
+                            <div class="logbook-item">
+                                <h3>${log.judul}</h3>
+                                <p>${log.deskripsi}</p>
+                                <p class="date">📅 ${log.tanggal}</p>
+                                ${imageHtml}
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    listDiv.innerHTML = '<div class="alert alert-info">Belum ada logbook untuk siswa ini.</div>';
+                }
+            } catch (error) {
+                console.error('Error loading student logbook:', error);
+                listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat logbook.</div>';
+            }
+        }
+
+        // ========================================
+        // HELPER FUNCTIONS
+        // ========================================
+        function showStudentTab(tab) {
+            document.querySelectorAll('#studentPage .tab').forEach(t => t.classList.remove('active'));
+            
+            const tabs = document.querySelectorAll('#studentPage .tab');
+            if (tab === 'profil') {
+                tabs[0].classList.add('active');
+                document.getElementById('profilTab').classList.remove('hidden');
+                document.getElementById('addTab').classList.add('hidden');
+                document.getElementById('viewTab').classList.add('hidden');
+            } else if (tab === 'add') {
+                tabs[1].classList.add('active');
+                document.getElementById('profilTab').classList.add('hidden');
+                document.getElementById('addTab').classList.remove('hidden');
+                document.getElementById('viewTab').classList.add('hidden');
+            } else {
+                tabs[2].classList.add('active');
+                document.getElementById('profilTab').classList.add('hidden');
+                document.getElementById('addTab').classList.add('hidden');
+                document.getElementById('viewTab').classList.remove('hidden');
+                
+                editingLogbookNo = null;
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.textContent = 'Simpan Logbook';
+                submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                document.getElementById('cancelBtn').classList.add('hidden');
+                document.getElementById('logbookForm').reset();
+                document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+                
+                loadMyLogbook();
+            }
+        }
+
+        function showAlert(elementId, message, type) {
+            const alertDiv = document.getElementById(elementId);
+            alertDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => alertDiv.innerHTML = '', 5000);
+        }
+
+        function convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
             });
         }
 
-        // ========================================
-        // AUTO LOGIN
-        // ========================================
-        function checkSavedLogin() {
-            const savedUser = localStorage.getItem('logbookUser');
-            const savedRole = localStorage.getItem('logbookRole');
-            const savedNama = localStorage.getItem('logbookNama');
-            const rememberMe = localStorage.getItem('logbookRemember') === 'true';
-            
-            if (rememberMe && savedUser && savedRole) {
-                currentUser = savedUser;
-                currentRole = savedRole;
-                
-                document.getElementById('loginPage').classList.add('hidden');
-                
-                if (savedRole === 'admin') {
-                    document.getElementById('adminPage').classList.remove('hidden');
-                    loadStudentsForAdmin();
-                } else {
-                    document.getElementById('studentPage').classList.remove('hidden');
-                    document.getElementById('studentName').textContent = savedNama || 'Siswa';
-                    loadProfile();
-                    showStudentTab('profil');
-                }
+        function convertDateToInput(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
             }
+            return dateStr;
         }
 
-        function saveLoginInfo(user, role, nama, remember) {
-            if (remember) {
-                localStorage.setItem('logbookUser', user);
-                localStorage.setItem('logbookRole', role);
-                localStorage.setItem('logbookNama', nama);
-                localStorage.setItem('logbookRemember', 'true');
-            } else {
-                clearLoginInfo();
-            }
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;',
+                '\n': ' ',
+                '\r': ''
+            };
+            return text.replace(/[&<>"'\n\r]/g, m => map[m]);
         }
 
-        function clearLoginInfo() {
-            localStorage.removeItem('logbookUser');
-            localStorage.removeItem('logbookRole');
-            localStorage.removeItem('logbookNama');
-            localStorage.removeItem('logbookRemember');
+        document.getElementById('fileInput').addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : '';
+            document.getElementById('fileName').textContent = fileName ? `✓ ${fileName}` : '';
+        });
+
+        function logout() {
+            currentUser = null;
+            currentRole = null;
+            selectedStudent = null;
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('studentPage').classList.add('hidden');
+            document.getElementById('adminPage').classList.add('hidden');
+            document.getElementById('studentDetailPage').classList.add('hidden');
+            document.getElementById('loginForm').reset();
         }
 
-        // ========================================
-        // KAMERA FUNCTIONS
-        // ========================================
-        async function openCamera() {
-            try {
-                const modal = document.getElementById('cameraModal');
-                const video = document.getElementById('cameraVideo');
-                
-                cameraStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { 
-                        facingMode: 'environment',
-                        width: { ideal: 1920 },
-                        height: { ideal: 1080 }
-                    } 
-                });
-                
-                video.srcObject = cameraStream;
-                modal.style.display = 'block';
-            } catch (error) {
-                alert('Tidak dapat mengakses kamera: ' + error.message);
+        function openImageModal(imageUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = 'block';
+            modalImg.src = imageUrl;
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeImageModal();
             }
+        });
+    </script>
+</body>
+</html>
