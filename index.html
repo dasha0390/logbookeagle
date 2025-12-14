@@ -1,1263 +1,1192 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logbook Magang</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .content {
-            padding: 30px 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .required {
-            color: #e74c3c;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #667eea;
-            color: white;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .logbook-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border-left: 4px solid #667eea;
-            position: relative;
-        }
-
-        .logbook-item h3 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 8px;
-            padding-right: 0;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        .logbook-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-            margin-bottom: 8px;
-        }
-
-        .btn-action {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 5px;
-            font-size: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-edit {
-            background: #3498db;
-            color: white;
-        }
-
-        .btn-edit:hover {
-            background: #2980b9;
-        }
-
-        .btn-delete {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .btn-delete:hover {
-            background: #c0392b;
-        }
-
-        .logbook-item p {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .logbook-item .date {
-            color: #999;
-            font-size: 12px;
-        }
-
-        .logbook-image {
-            margin-top: 10px;
-            border-radius: 8px;
-            overflow: hidden;
-            max-width: 100%;
-        }
-
-        .logbook-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .logbook-image img:hover {
-            transform: scale(1.02);
-        }
-
-        .image-placeholder {
-            width: 100%;
-            height: 200px;
-            background: #e0e0e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            color: #999;
-            font-size: 14px;
-        }
-
-        .image-modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            animation: fadeIn 0.3s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .image-modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 90%;
-            max-height: 90%;
-        }
-
-        .image-modal-content img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-        }
-
-        .image-modal-close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10000;
-        }
-
-        .image-modal-close:hover {
-            color: #667eea;
-        }
-
-        .file-link {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 6px 12px;
-            background: #667eea;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-
-        .file-link:hover {
-            background: #5568d3;
-        }
-
-        .alert {
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .user-info {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .user-info span {
-            font-weight: 600;
-            color: #667eea;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #667eea;
-        }
-
-        .file-upload {
-            border: 2px dashed #e0e0e0;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .file-upload:hover {
-            border-color: #667eea;
-            background: #f8f9fa;
-        }
-
-        .file-upload input[type="file"] {
-            display: none;
-        }
-
-        .file-name {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #667eea;
-        }
-
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            color: #666;
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            color: #667eea;
-            border-bottom: 3px solid #667eea;
-            margin-bottom: -2px;
-        }
-
-        .profile-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .profile-card h2 {
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-
-        .profile-card p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .student-card {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-left: 4px solid #667eea;
-        }
-
-        .student-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-
-        .student-card h3 {
-            color: #667eea;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .student-card p {
-            color: #666;
-            font-size: 13px;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .info-item {
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        .info-item label {
-            font-size: 11px;
-            color: #999;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .info-item span {
-            font-size: 13px;
-            color: #333;
-            font-weight: 600;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            display: block;
-        }
-
-        .info-item.full-width {
-            grid-column: 1 / -1;
-        }
-
-        @media (max-width: 600px) {
-            .info-grid {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .info-item {
-                padding: 12px;
-            }
-
-            .info-item label {
-                font-size: 12px;
-            }
-
-            .info-item span {
-                font-size: 14px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logbook Magang</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .header h1 { font-size: 24px; margin-bottom: 5px; }
+    .header p { font-size: 14px; opacity: 0.9; }
+    .content { padding: 30px 20px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .required { color: #e74c3c; }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+    .btn-secondary {
+      background: #667eea;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+    }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .logbook-item {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border-left: 4px solid #667eea;
+      position: relative;
+    }
+    .logbook-item h3 {
+      color: #667eea;
+      font-size: 16px;
+      margin-bottom: 8px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .logbook-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      margin-bottom: 8px;
+    }
+    .btn-action {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .btn-edit { background: #3498db; color: white; }
+    .btn-edit:hover { background: #2980b9; }
+    .btn-delete { background: #e74c3c; color: white; }
+    .btn-delete:hover { background: #c0392b; }
+    .logbook-item p { color: #666; font-size: 14px; margin-bottom: 5px; }
+    .logbook-item .date { color: #999; font-size: 12px; }
+    .logbook-image {
+      margin-top: 10px;
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 100%;
+    }
+    .logbook-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .logbook-image img:hover { transform: scale(1.02); }
+    .image-placeholder {
+      width: 100%;
+      height: 200px;
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: #999;
+      font-size: 14px;
+    }
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.9);
+      animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .image-modal-content {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 90%;
+      max-height: 90%;
+    }
+    .image-modal-content img { width: 100%; height: auto; border-radius: 10px; }
+    .image-modal-close {
+      position: absolute;
+      top: 20px; right: 30px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10000;
+    }
+    .image-modal-close:hover { color: #667eea; }
+    .file-link {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 12px;
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+    .file-link:hover { background: #5568d3; }
+    .alert {
+      padding: 12px 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .alert-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .alert-info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    .hidden { display: none; }
+    .user-info {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .user-info span { font-weight: 600; color: #667eea; }
+    .loading { text-align: center; padding: 20px; color: #667eea; }
+
+    .file-upload {
+      border: 2px dashed #e0e0e0;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      user-select: none;
+    }
+    .file-upload:hover { border-color: #667eea; background: #f8f9fa; }
+    .file-upload input[type="file"] { display: none; }
+    .file-name { margin-top: 10px; font-size: 14px; color: #667eea; }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    .tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.3s;
+    }
+    .tab.active {
+      color: #667eea;
+      border-bottom: 3px solid #667eea;
+      margin-bottom: -2px;
+    }
+    .profile-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .profile-card h2 { font-size: 20px; margin-bottom: 5px; }
+    .profile-card p { font-size: 14px; opacity: 0.9; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+    .student-card {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-left: 4px solid #667eea;
+    }
+    .student-card:hover {
+      transform: translateX(5px);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    .student-card h3 { color: #667eea; font-size: 16px; margin-bottom: 5px; }
+    .student-card p { color: #666; font-size: 13px; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .info-item {
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .info-item label {
+      font-size: 11px;
+      color: #999;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .info-item span {
+      font-size: 13px;
+      color: #333;
+      font-weight: 600;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      display: block;
+    }
+    .info-item.full-width { grid-column: 1 / -1; }
+    @media (max-width: 600px) {
+      .info-grid { grid-template-columns: 1fr; gap: 8px; }
+      .info-item { padding: 12px; }
+      .info-item label { font-size: 12px; }
+      .info-item span { font-size: 14px; }
+    }
+
+    .hint { font-size: 12px; color: #777; margin-top: 6px; }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <!-- Login Page -->
-        <div id="loginPage">
-            <div class="header">
-                <img src="eagle.png" width="60">
-                <h1>Logbook Magang</h1>
-                <p>Sistem Pencatatan Kegiatan Magang</p>
-            </div>
-            <div class="content">
-                <div id="loginAlert"></div>
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label>Username <span class="required">*</span></label>
-                        <input type="text" id="username" required placeholder="Masukkan username">
-                    </div>
-                    <div class="form-group">
-                        <label>Password <span class="required">*</span></label>
-                        <input type="password" id="password" required placeholder="Masukkan password">
-                    </div>
-                    <div class="form-group" style="margin-bottom: 10px;">
-                        <label style="display: flex; align-items: center; cursor: pointer; font-weight: normal;">
-                        <input type="checkbox" id="rememberMe" style="width: auto; margin-right: 8px;">
-                        <span style="font-size: 14px;">Ingat saya</span>
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary" id="loginBtn">Masuk</button>
-                </form>
-            </div>
-        </div>
+  <div class="container">
+    <!-- LOGIN -->
+    <div id="loginPage">
+      <div class="header">
+        <img src="eagle.png" width="60" />
+        <h1>Logbook Magang</h1>
+        <p>Sistem Pencatatan Kegiatan Magang</p>
+      </div>
 
-        <!-- Student Page -->
-        <div id="studentPage" class="hidden">
-            <div class="header">
-                <img src="eagle.png" width="60">
-                <h1>Logbook Saya</h1>
-                <p>Catat kegiatan magang harian Anda</p>
-            </div>
-            <div class="content">
-                <div class="user-info">
-                    <span id="studentName">Siswa</span>
-                    <button class="btn-secondary" onclick="logout()" style="padding: 8px 15px; width: auto; border-radius: 5px;">Keluar</button>
-                </div>
+      <div class="content">
+        <div id="loginAlert"></div>
 
-                <div class="tabs">
-                    <div class="tab active" onclick="showStudentTab('profil')">👤 Profil</div>
-                    <div class="tab" onclick="showStudentTab('add')">➕ Tambah</div>
-                    <div class="tab" onclick="showStudentTab('view')">📋 Lihat</div>
-                </div>
+        <form id="loginForm">
+          <div class="form-group">
+            <label>Username <span class="required">*</span></label>
+            <input type="text" id="username" required placeholder="Masukkan username" />
+          </div>
 
-                <!-- Tab Profil -->
-                <div id="profilTab">
-                    <div id="profilAlert"></div>
-                    <form id="profilForm">
-                        <div class="form-group">
-                            <label>Nama Lengkap <span class="required">*</span></label>
-                            <input type="text" id="namaLengkap" required placeholder="Nama lengkap">
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>NIM/NIS <span class="required">*</span></label>
-                                <input type="text" id="nim" required placeholder="NIM/NIS">
-                            </div>
-                            <div class="form-group">
-                                <label>Telepon <span class="required">*</span></label>
-                                <input type="tel" id="telepon" required placeholder="Nomor telepon">
-                            </div>
-                        </div>
+          <div class="form-group">
+            <label>Password <span class="required">*</span></label>
+            <input type="password" id="password" required placeholder="Masukkan password" />
+          </div>
 
-                        <div class="form-group">
-                            <label>Email <span class="required">*</span></label>
-                            <input type="email" id="email" required placeholder="Email">
-                        </div>
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label style="display:flex; align-items:center; cursor:pointer; font-weight: normal;">
+              <input type="checkbox" id="rememberMe" style="width:auto; margin-right:8px;" />
+              <span style="font-size:14px;">Ingat saya</span>
+            </label>
+            <div class="hint">Jika dicentang, login akan tersimpan walau halaman di-refresh.</div>
+          </div>
 
-                        <div class="form-group">
-                            <label>Tempat Magang <span class="required">*</span></label>
-                            <input type="text" id="tempatMagang" required placeholder="Nama perusahaan/instansi">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Posisi Magang <span class="required">*</span></label>
-                            <input type="text" id="posisi" required placeholder="Contoh: Web Developer, Designer">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Nama Pembimbing</label>
-                            <input type="text" id="pembimbing" placeholder="Nama pembimbing di tempat magang">
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Tanggal Mulai <span class="required">*</span></label>
-                                <input type="date" id="tanggalMulai" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Tanggal Selesai <span class="required">*</span></label>
-                                <input type="date" id="tanggalSelesai" required>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary" id="saveProfilBtn">💾 Simpan Profil</button>
-                    </form>
-                </div>
-
-                <!-- Tab Tambah Logbook -->
-                <div id="addTab" class="hidden">
-                    <div id="studentAlert"></div>
-                    <form id="logbookForm">
-                        <div class="form-group">
-                            <label>Tanggal <span class="required">*</span></label>
-                            <input type="date" id="tanggal" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Judul Kegiatan <span class="required">*</span></label>
-                            <input type="text" id="judul" required placeholder="Contoh: Membuat video promosi">
-                        </div>
-                        <div class="form-group">
-                            <label>Deskripsi <span class="required">*</span></label>
-                            <textarea id="deskripsi" required placeholder="Jelaskan kegiatan yang dilakukan"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Upload Foto (Opsional)</label>
-                            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
-                                <p>📷 Klik untuk upload foto</p>
-                                <p style="font-size: 12px; color: #999;">Max: 2MB</p>
-                                <input type="file" id="fileInput" accept="image/*">
-                                <div id="fileName" class="file-name"></div>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="submitBtn">Simpan Logbook</button>
-                        <button type="button" class="btn btn-secondary hidden" id="cancelBtn" onclick="cancelEdit()">Batal Edit</button>
-                    </form>
-                </div>
-
-                <!-- Tab Lihat Logbook -->
-                <div id="viewTab" class="hidden">
-                    <div id="logbookList" class="loading">Memuat data...</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Admin Page -->
-        <div id="adminPage" class="hidden">
-            <div class="header">
-                <img src="eagle.png" width="60">
-                <h1>Dashboard Admin</h1>
-                <p>Kelola dan pantau logbook siswa</p>
-            </div>
-            <div class="content">
-                <div class="user-info">
-                    <span>Administrator</span>
-                    <button class="btn-secondary" onclick="logout()" style="padding: 8px 15px; width: auto; border-radius: 5px;">Keluar</button>
-                </div>
-
-                <div id="adminAlert"></div>
-                
-                <div id="studentsList"></div>
-            </div>
-        </div>
-
-        <!-- Detail Siswa (Admin) -->
-        <div id="studentDetailPage" class="hidden">
-            <div class="header">
-                <img src="eagle.png" width="60">
-                <h1 id="detailStudentName">Detail Siswa</h1>
-                <p>Profil dan Logbook</p>
-            </div>
-            <div class="content">
-                <button class="btn btn-secondary" onclick="backToAdmin()" style="margin-bottom: 20px;">← Kembali</button>
-
-                <div class="tabs">
-                    <div class="tab active" onclick="showDetailTab('profil')">👤 Profil</div>
-                    <div class="tab" onclick="showDetailTab('logbook')">📋 Logbook</div>
-                </div>
-
-                <div id="detailProfilTab">
-                    <div id="studentProfileDisplay" class="loading">Memuat profil...</div>
-                </div>
-
-                <div id="detailLogbookTab" class="hidden">
-                    <div id="adminLogbookList" class="loading">Memuat logbook...</div>
-                </div>
-            </div>
-        </div>
+          <button type="submit" class="btn btn-primary" id="loginBtn">Masuk</button>
+        </form>
+      </div>
     </div>
 
-    <!-- Modal untuk zoom gambar -->
-    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
-        <span class="image-modal-close">&times;</span>
-        <div class="image-modal-content">
-            <img id="modalImage" src="" alt="Preview">
+    <!-- SISWA -->
+    <div id="studentPage" class="hidden">
+      <div class="header">
+        <img src="eagle.png" width="60" />
+        <h1>Logbook Saya</h1>
+        <p>Catat kegiatan magang harian Anda</p>
+      </div>
+
+      <div class="content">
+        <div class="user-info">
+          <span id="studentName">Siswa</span>
+          <button class="btn-secondary" onclick="logout()" style="padding:8px 15px; width:auto; border-radius:5px;">Keluar</button>
         </div>
+
+        <div class="tabs">
+          <div class="tab active" onclick="showStudentTab('profil')">👤 Profil</div>
+          <div class="tab" onclick="showStudentTab('add')">➕ Tambah</div>
+          <div class="tab" onclick="showStudentTab('view')">📋 Lihat</div>
+        </div>
+
+        <!-- TAB PROFIL -->
+        <div id="profilTab">
+          <div id="profilAlert"></div>
+
+          <form id="profilForm">
+            <div class="form-group">
+              <label>Nama Lengkap <span class="required">*</span></label>
+              <input type="text" id="namaLengkap" required placeholder="Nama lengkap" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>No Absen <span class="required">*</span></label>
+                <input type="text" id="noAbsen" required placeholder="Nomor absen" />
+              </div>
+              <div class="form-group">
+                <label>Telepon <span class="required">*</span></label>
+                <input type="tel" id="telepon" required placeholder="Nomor telepon" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Email <span class="required">*</span></label>
+              <input type="email" id="email" required placeholder="Email" />
+            </div>
+
+            <div class="form-group">
+              <label>Tempat Magang <span class="required">*</span></label>
+              <input type="text" id="tempatMagang" required placeholder="Nama perusahaan/instansi" />
+            </div>
+
+            <div class="form-group">
+              <label>Alamat Tempat Magang <span class="required">*</span></label>
+              <textarea id="alamatMagang" required placeholder="Alamat lengkap tempat magang"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Posisi Magang <span class="required">*</span></label>
+              <input type="text" id="posisi" required placeholder="Contoh: Web Developer, Designer" />
+            </div>
+
+            <div class="form-group">
+              <label>Nama Pembimbing</label>
+              <input type="text" id="pembimbing" placeholder="Nama pembimbing di tempat magang" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tanggal Mulai <span class="required">*</span></label>
+                <input type="date" id="tanggalMulai" required />
+              </div>
+              <div class="form-group">
+                <label>Tanggal Selesai <span class="required">*</span></label>
+                <input type="date" id="tanggalSelesai" required />
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="saveProfilBtn">💾 Simpan Profil</button>
+          </form>
+        </div>
+
+        <!-- TAB TAMBAH -->
+        <div id="addTab" class="hidden">
+          <div id="studentAlert"></div>
+
+          <form id="logbookForm">
+            <div class="form-group">
+              <label>Tanggal <span class="required">*</span></label>
+              <input type="date" id="tanggal" required />
+            </div>
+
+            <div class="form-group">
+              <label>Judul Kegiatan <span class="required">*</span></label>
+              <input type="text" id="judul" required placeholder="Contoh: Membuat video promosi" />
+            </div>
+
+            <div class="form-group">
+              <label>Deskripsi <span class="required">*</span></label>
+              <textarea id="deskripsi" required placeholder="Jelaskan kegiatan yang dilakukan"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Upload Foto (Opsional)</label>
+              <div class="file-upload" onclick="openFilePicker()">
+                <p>📷 Klik untuk pilih foto / buka kamera</p>
+                <p style="font-size:12px; color:#999;">Otomatis dikompres sampai max 2MB</p>
+
+                <!-- capture="environment" agar mobile bisa buka kamera -->
+                <input type="file" id="fileInput" accept="image/*" capture="environment" />
+                <div id="fileName" class="file-name"></div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="submitBtn">Simpan Logbook</button>
+            <button type="button" class="btn btn-secondary hidden" id="cancelBtn" onclick="cancelEdit()">Batal Edit</button>
+          </form>
+        </div>
+
+        <!-- TAB LIHAT -->
+        <div id="viewTab" class="hidden">
+          <div id="logbookList" class="loading">Memuat data...</div>
+        </div>
+      </div>
     </div>
 
-    <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWrl2F-pr6hHaG_WCJT6hcIrkj-WdiM8DSuw4Ny6e66GXjLHi1thPFZn2N4BH0VR57zQ/exec";
-        let currentUser = null;
-        let currentRole = null;
-        let editingLogbookNo = null;
-        let selectedStudent = null;
+    <!-- ADMIN -->
+    <div id="adminPage" class="hidden">
+      <div class="header">
+        <img src="eagle.png" width="60" />
+        <h1>Dashboard Admin</h1>
+        <p>Kelola dan pantau logbook siswa</p>
+      </div>
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0];
-            const tanggalInput = document.getElementById('tanggal');
-            if (tanggalInput) tanggalInput.value = today;
-        });
+      <div class="content">
+        <div class="user-info">
+          <span>Administrator</span>
+          <button class="btn-secondary" onclick="logout()" style="padding:8px 15px; width:auto; border-radius:5px;">Keluar</button>
+        </div>
 
-        // ========================================
-        // LOGIN
-        // ========================================
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            
-            loginBtn.disabled = true;
-            loginBtn.textContent = 'Memproses...';
+        <div id="adminAlert"></div>
+        <div id="studentsList"></div>
+      </div>
+    </div>
 
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=login&username=${username}&password=${password}`);
-                const data = await response.json();
+    <!-- DETAIL SISWA (ADMIN) -->
+    <div id="studentDetailPage" class="hidden">
+      <div class="header">
+        <img src="eagle.png" width="60" />
+        <h1 id="detailStudentName">Detail Siswa</h1>
+        <p>Profil dan Logbook</p>
+      </div>
 
-                if (data.success) {
-                    currentUser = data.user;
-                    currentRole = data.role;
-                    
-                    document.getElementById('loginPage').classList.add('hidden');
-                    
-                    if (data.role === 'admin') {
-                        document.getElementById('adminPage').classList.remove('hidden');
-                        loadStudentsForAdmin();
-                    } else {
-                        document.getElementById('studentPage').classList.remove('hidden');
-                        document.getElementById('studentName').textContent = data.nama;
-                        loadProfile();
-                        showStudentTab('profil');
-                    }
-                } else {
-                    showAlert('loginAlert', data.message, 'error');
-                }
-            } catch (error) {
-                showAlert('loginAlert', 'Gagal login: ' + error.message, 'error');
+      <div class="content">
+        <button class="btn btn-secondary" onclick="backToAdmin()" style="margin-bottom:20px;">← Kembali</button>
+
+        <div class="tabs">
+          <div class="tab active" onclick="showDetailTab('profil')">👤 Profil</div>
+          <div class="tab" onclick="showDetailTab('logbook')">📋 Logbook</div>
+        </div>
+
+        <div id="detailProfilTab">
+          <div id="studentProfileDisplay" class="loading">Memuat profil...</div>
+        </div>
+
+        <div id="detailLogbookTab" class="hidden">
+          <div id="adminLogbookList" class="loading">Memuat logbook...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ZOOM GAMBAR -->
+  <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+    <span class="image-modal-close">&times;</span>
+    <div class="image-modal-content">
+      <img id="modalImage" src="" alt="Preview" />
+    </div>
+  </div>
+
+  <script>
+    // GANTI DENGAN URL WEB APP KAMU
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwG073ZtSzl3p72c869I3JSRTVgrX4uWVVEozKOj4jlkAlEaXiB-Q4xhE3meTay8o2Drw/exec";
+
+    let currentUser = null;
+    let currentRole = null;
+    let editingLogbookNo = null;
+    let selectedStudent = null;
+
+    document.addEventListener('DOMContentLoaded', async function () {
+      // set tanggal default hari ini
+      const today = new Date().toISOString().split('T')[0];
+      const tanggalInput = document.getElementById('tanggal');
+      if (tanggalInput) tanggalInput.value = today;
+
+      // Auto-login jika remember me aktif
+      const remember = localStorage.getItem('logbook_remember') === '1';
+      if (remember) {
+        const u = localStorage.getItem('logbook_username');
+        const p = localStorage.getItem('logbook_password');
+        if (u && p) {
+          try {
+            const response = await fetch(`${SCRIPT_URL}?action=login&username=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}`);
+            const data = await response.json();
+            if (data.success) {
+              currentUser = data.user;
+              currentRole = data.role;
+
+              document.getElementById('loginPage').classList.add('hidden');
+
+              if (data.role === 'admin') {
+                document.getElementById('adminPage').classList.remove('hidden');
+                loadStudentsForAdmin();
+              } else {
+                document.getElementById('studentPage').classList.remove('hidden');
+                document.getElementById('studentName').textContent = data.nama;
+                await loadProfile();
+                showStudentTab('profil');
+              }
             }
-
-            loginBtn.disabled = false;
-            loginBtn.textContent = 'Masuk';
-        });
-
-        // ========================================
-        // PROFIL
-        // ========================================
-        async function loadProfile() {
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getProfile&username=${currentUser}`);
-                const data = await response.json();
-
-                if (data.success && data.profile) {
-                    const p = data.profile;
-                    document.getElementById('namaLengkap').value = p.namaLengkap || '';
-                    document.getElementById('nim').value = p.nim || '';
-                    document.getElementById('email').value = p.email || '';
-                    document.getElementById('telepon').value = p.telepon || '';
-                    document.getElementById('tempatMagang').value = p.tempatMagang || '';
-                    document.getElementById('posisi').value = p.posisi || '';
-                    document.getElementById('pembimbing').value = p.pembimbing || '';
-                    document.getElementById('tanggalMulai').value = convertDateToInput(p.tanggalMulai) || '';
-                    document.getElementById('tanggalSelesai').value = convertDateToInput(p.tanggalSelesai) || '';
-                }
-            } catch (error) {
-                console.error('Error loading profile:', error);
-            }
+          } catch (e) {
+            // jika gagal, tetap tampilkan login
+          }
         }
+      }
+    });
 
-        document.getElementById('profilForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const saveBtn = document.getElementById('saveProfilBtn');
-            saveBtn.disabled = true;
-            saveBtn.textContent = '💾 Menyimpan...';
+    // ========================================
+    // LOGIN
+    // ========================================
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const loginBtn = document.getElementById('loginBtn');
 
-            try {
-                const payload = {
-                    action: 'saveProfile',
-                    username: currentUser,
-                    namaLengkap: document.getElementById('namaLengkap').value,
-                    nim: document.getElementById('nim').value,
-                    email: document.getElementById('email').value,
-                    telepon: document.getElementById('telepon').value,
-                    tempatMagang: document.getElementById('tempatMagang').value,
-                    posisi: document.getElementById('posisi').value,
-                    pembimbing: document.getElementById('pembimbing').value,
-                    tanggalMulai: document.getElementById('tanggalMulai').value,
-                    tanggalSelesai: document.getElementById('tanggalSelesai').value
-                };
-                
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                });
-                
-                const data = await response.json();
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Memproses...';
 
-                if (data.success) {
-                    showAlert('profilAlert', '✅ Profil berhasil disimpan!', 'success');
-                } else {
-                    showAlert('profilAlert', '❌ ' + data.message, 'error');
-                }
-            } catch (error) {
-                showAlert('profilAlert', '❌ Gagal menyimpan: ' + error.message, 'error');
-            }
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`);
+        const data = await response.json();
 
-            saveBtn.disabled = false;
-            saveBtn.textContent = '💾 Simpan Profil';
-        });
+        if (data.success) {
+          currentUser = data.user;
+          currentRole = data.role;
 
-        // ========================================
-        // LOGBOOK
-        // ========================================
-        document.getElementById('logbookForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            
-            const isEditing = editingLogbookNo !== null;
-            submitBtn.textContent = isEditing ? 'Mengupdate...' : 'Menyimpan...';
+          // Remember Me
+          const remember = document.getElementById('rememberMe').checked;
+          if (remember) {
+            localStorage.setItem('logbook_remember', '1');
+            localStorage.setItem('logbook_username', username);
+            localStorage.setItem('logbook_password', password);
+          } else {
+            localStorage.removeItem('logbook_remember');
+            localStorage.removeItem('logbook_username');
+            localStorage.removeItem('logbook_password');
+          }
 
-            const tanggal = document.getElementById('tanggal').value;
-            const judul = document.getElementById('judul').value;
-            const deskripsi = document.getElementById('deskripsi').value;
-            const fileInput = document.getElementById('fileInput');
-            
-            let fileData = '';
-            let fileName = '';
-            
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                
-                if (file.size > 2 * 1024 * 1024) {
-                    showAlert('studentAlert', '⚠️ Ukuran file maksimal 2MB!', 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = isEditing ? 'Update Logbook' : 'Simpan Logbook';
-                    return;
-                }
-                
-                fileName = file.name;
-                
-                try {
-                    fileData = await convertToBase64(file);
-                } catch (error) {
-                    console.error('Error converting file:', error);
-                    showAlert('studentAlert', '⚠️ Gagal memproses gambar', 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = isEditing ? 'Update Logbook' : 'Simpan Logbook';
-                    return;
-                }
-            }
+          document.getElementById('loginPage').classList.add('hidden');
 
-            try {
-                const payload = {
-                    action: isEditing ? 'updateLogbook' : 'addLogbook',
-                    username: currentUser,
-                    tanggal: tanggal,
-                    judul: judul,
-                    deskripsi: deskripsi,
-                    fileData: fileData,
-                    fileName: fileName
-                };
-                
-                if (isEditing) {
-                    payload.no = editingLogbookNo;
-                }
-                
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                });
-                
-                const data = await response.json();
-
-                if (data.success) {
-                    showAlert('studentAlert', isEditing ? '✅ Logbook berhasil diupdate!' : '✅ Logbook berhasil disimpan!', 'success');
-                    document.getElementById('logbookForm').reset();
-                    document.getElementById('fileName').textContent = '';
-                    document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-                    editingLogbookNo = null;
-                    submitBtn.textContent = 'Simpan Logbook';
-                    document.getElementById('cancelBtn').classList.add('hidden');
-                    loadMyLogbook();
-                } else {
-                    showAlert('studentAlert', '❌ ' + data.message, 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showAlert('studentAlert', '❌ Gagal menyimpan: ' + error.message, 'error');
-            }
-
-            submitBtn.disabled = false;
-            if (!isEditing) {
-                submitBtn.textContent = 'Simpan Logbook';
-            }
-        });
-
-        async function loadMyLogbook() {
-            const listDiv = document.getElementById('logbookList');
-            
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getLogbook&username=${currentUser}`);
-                const data = await response.json();
-
-                if (data.success && data.logbook.length > 0) {
-                    listDiv.innerHTML = data.logbook.map(log => {
-                        let imageHtml = '';
-                        
-                        if (log.fileId) {
-                            const thumbnailUrl = `https://drive.google.com/thumbnail?id=${log.fileId}&sz=w400`;
-                            const fullImageUrl = `https://drive.google.com/uc?id=${log.fileId}`;
-                            imageHtml = `
-                                <div class="logbook-image">
-                                    <img src="${thumbnailUrl}" 
-                                         alt="Foto kegiatan" 
-                                         onclick="openImageModal('${fullImageUrl}')"
-                                         onerror="this.parentElement.innerHTML='<div class=image-placeholder>📷 Foto tidak dapat dimuat</div>'">
-                                </div>
-                            `;
-                        } else if (log.berkas && log.berkas.includes('drive.google.com')) {
-                            imageHtml = `<a href="${log.berkas}" target="_blank" class="file-link">📷 Lihat Foto</a>`;
-                        }
-                        
-                        return `
-                            <div class="logbook-item">
-                                <div class="logbook-actions">
-                                    <button class="btn-action btn-edit" onclick="editLogbook(${log.no}, '${escapeHtml(log.tanggal)}', '${escapeHtml(log.judul)}', '${escapeHtml(log.deskripsi)}')">✏️ Edit</button>
-                                    <button class="btn-action btn-delete" onclick="deleteLogbook(${log.no})">🗑️ Hapus</button>
-                                </div>
-                                <h3>${log.judul}</h3>
-                                <p>${log.deskripsi}</p>
-                                <p class="date">📅 ${log.tanggal}</p>
-                                ${imageHtml}
-                            </div>
-                        `;
-                    }).join('');
-                } else {
-                    listDiv.innerHTML = '<div class="alert alert-info">Belum ada logbook. Mulai tambahkan kegiatan Anda!</div>';
-                }
-            } catch (error) {
-                console.error('Error loading logbook:', error);
-                listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat logbook.</div>';
-            }
-        }
-
-        function editLogbook(no, tanggal, judul, deskripsi) {
-            editingLogbookNo = no;
-            
-            const dateParts = tanggal.split('/');
-            const formattedDate = dateParts.length === 3 ? `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}` : tanggal;
-            
-            document.getElementById('tanggal').value = formattedDate;
-            document.getElementById('judul').value = judul;
-            document.getElementById('deskripsi').value = deskripsi;
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.textContent = 'Update Logbook';
-            submitBtn.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
-            
-            const cancelBtn = document.getElementById('cancelBtn');
-            cancelBtn.classList.remove('hidden');
-            
-            showStudentTab('add');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            showAlert('studentAlert', '📝 Mode edit: Ubah data dan klik "Update Logbook"', 'info');
-        }
-
-        function cancelEdit() {
-            editingLogbookNo = null;
-            document.getElementById('logbookForm').reset();
-            document.getElementById('fileName').textContent = '';
-            document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.textContent = 'Simpan Logbook';
-            submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-            
-            document.getElementById('cancelBtn').classList.add('hidden');
-            document.getElementById('studentAlert').innerHTML = '';
-        }
-
-        async function deleteLogbook(no) {
-            if (!confirm('Apakah Anda yakin ingin menghapus logbook ini?')) return;
-            
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=deleteLogbook&username=${currentUser}&no=${no}`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    showAlert('studentAlert', '✅ Logbook berhasil dihapus!', 'success');
-                    loadMyLogbook();
-                } else {
-                    showAlert('studentAlert', '❌ ' + data.message, 'error');
-                }
-            } catch (error) {
-                showAlert('studentAlert', '❌ Gagal menghapus: ' + error.message, 'error');
-            }
-        }
-
-        // ========================================
-        // ADMIN FUNCTIONS
-        // ========================================
-        async function loadStudentsForAdmin() {
-            const listDiv = document.getElementById('studentsList');
-            listDiv.innerHTML = '<div class="loading">Memuat daftar siswa...</div>';
-            
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getStudents`);
-                const data = await response.json();
-                
-                if (data.success && data.students.length > 0) {
-                    listDiv.innerHTML = data.students.map(student => `
-                        <div class="student-card" onclick="viewStudentDetail('${student.username}', '${student.nama}')">
-                            <h3>👤 ${student.nama}</h3>
-                            <p>Username: ${student.username}</p>
-                            <p style="font-size: 12px; margin-top: 8px; color: #667eea;">Klik untuk melihat detail →</p>
-                        </div>
-                    `).join('');
-                } else {
-                    listDiv.innerHTML = '<div class="alert alert-info">Belum ada siswa terdaftar.</div>';
-                }
-            } catch (error) {
-                listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat daftar siswa.</div>';
-            }
-        }
-
-        async function viewStudentDetail(username, nama) {
-            selectedStudent = username;
-            document.getElementById('detailStudentName').textContent = nama;
-            
-            document.getElementById('adminPage').classList.add('hidden');
-            document.getElementById('studentDetailPage').classList.remove('hidden');
-            
-            showDetailTab('profil');
-        }
-
-        function backToAdmin() {
-            document.getElementById('studentDetailPage').classList.add('hidden');
+          if (data.role === 'admin') {
             document.getElementById('adminPage').classList.remove('hidden');
-            selectedStudent = null;
+            loadStudentsForAdmin();
+          } else {
+            document.getElementById('studentPage').classList.remove('hidden');
+            document.getElementById('studentName').textContent = data.nama;
+            await loadProfile();
+            showStudentTab('profil');
+          }
+
+        } else {
+          showAlert('loginAlert', data.message || 'Login gagal', 'error');
         }
+      } catch (error) {
+        showAlert('loginAlert', 'Gagal login: ' + error.message, 'error');
+      }
 
-        async function showDetailTab(tab) {
-            document.querySelectorAll('#studentDetailPage .tab').forEach(t => t.classList.remove('active'));
-            
-            if (tab === 'profil') {
-                document.querySelectorAll('#studentDetailPage .tab')[0].classList.add('active');
-                document.getElementById('detailProfilTab').classList.remove('hidden');
-                document.getElementById('detailLogbookTab').classList.add('hidden');
-                await loadStudentProfile(selectedStudent);
-            } else {
-                document.querySelectorAll('#studentDetailPage .tab')[1].classList.add('active');
-                document.getElementById('detailProfilTab').classList.add('hidden');
-                document.getElementById('detailLogbookTab').classList.remove('hidden');
-                await loadStudentLogbook(selectedStudent);
-            }
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Masuk';
+    });
+
+    // ========================================
+    // PROFIL
+    // ========================================
+    async function loadProfile() {
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=getProfile&username=${encodeURIComponent(currentUser)}`);
+        const data = await response.json();
+
+        if (data.success && data.profile) {
+          const p = data.profile;
+          document.getElementById('namaLengkap').value = p.namaLengkap || '';
+          document.getElementById('noAbsen').value = p.noAbsen || '';
+          document.getElementById('email').value = p.email || '';
+          document.getElementById('telepon').value = p.telepon || '';
+          document.getElementById('tempatMagang').value = p.tempatMagang || '';
+          document.getElementById('alamatMagang').value = p.alamatMagang || '';
+          document.getElementById('posisi').value = p.posisi || '';
+          document.getElementById('pembimbing').value = p.pembimbing || '';
+          document.getElementById('tanggalMulai').value = convertDateToInput(p.tanggalMulai) || '';
+          document.getElementById('tanggalSelesai').value = convertDateToInput(p.tanggalSelesai) || '';
         }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+      }
+    }
 
-        async function loadStudentProfile(username) {
-            const displayDiv = document.getElementById('studentProfileDisplay');
-            displayDiv.innerHTML = '<div class="loading">Memuat profil...</div>';
-            
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getProfile&username=${username}`);
-                const data = await response.json();
-                
-                if (data.success && data.profile) {
-                    const p = data.profile;
-                    const hasData = p.namaLengkap || p.tempatMagang;
-                    
-                    if (!hasData) {
-                        displayDiv.innerHTML = '<div class="alert alert-info">Siswa belum melengkapi profil.</div>';
-                        return;
-                    }
-                    
-                    displayDiv.innerHTML = `
-                        <div class="profile-card">
-                            <h2>${p.namaLengkap || '-'}</h2>
-                            <p>${p.nim || '-'}</p>
-                        </div>
-                        
-                        <div class="info-grid">
-                            <div class="info-item full-width">
-                                <label>Email</label>
-                                <span>${p.email || '-'}</span>
-                            </div>
-                            <div class="info-item full-width">
-                                <label>Telepon</label>
-                                <span>${p.telepon || '-'}</span>
-                            </div>
-                            <div class="info-item full-width">
-                                <label>Tempat Magang</label>
-                                <span>${p.tempatMagang || '-'}</span>
-                            </div>
-                            <div class="info-item full-width">
-                                <label>Posisi</label>
-                                <span>${p.posisi || '-'}</span>
-                            </div>
-                            <div class="info-item full-width">
-                                <label>Pembimbing</label>
-                                <span>${p.pembimbing || '-'}</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Tanggal Mulai</label>
-                                <span>${p.tanggalMulai || '-'}</span>
-                            </div>
-                            <div class="info-item">
-                                <label>Tanggal Selesai</label>
-                                <span>${p.tanggalSelesai || '-'}</span>
-                            </div>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                displayDiv.innerHTML = '<div class="alert alert-error">Gagal memuat profil.</div>';
-            }
-        }
+    document.getElementById('profilForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const saveBtn = document.getElementById('saveProfilBtn');
+      saveBtn.disabled = true;
+      saveBtn.textContent = '💾 Menyimpan...';
 
-        async function loadStudentLogbook(username) {
-            const listDiv = document.getElementById('adminLogbookList');
-            listDiv.innerHTML = '<div class="loading">Memuat logbook...</div>';
+      try {
+        const payload = {
+          action: 'saveProfile',
+          username: currentUser,
+          namaLengkap: document.getElementById('namaLengkap').value,
+          noAbsen: document.getElementById('noAbsen').value,
+          email: document.getElementById('email').value,
+          telepon: document.getElementById('telepon').value,
+          tempatMagang: document.getElementById('tempatMagang').value,
+          alamatMagang: document.getElementById('alamatMagang').value,
+          posisi: document.getElementById('posisi').value,
+          pembimbing: document.getElementById('pembimbing').value,
+          tanggalMulai: document.getElementById('tanggalMulai').value,
+          tanggalSelesai: document.getElementById('tanggalSelesai').value
+        };
 
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getLogbook&username=${username}`);
-                const data = await response.json();
-
-                if (data.success && data.logbook.length > 0) {
-                    listDiv.innerHTML = data.logbook.map(log => {
-                        let imageHtml = '';
-                        
-                        if (log.fileId) {
-                            const thumbnailUrl = `https://drive.google.com/thumbnail?id=${log.fileId}&sz=w400`;
-                            imageHtml = `
-                                <div class="logbook-image">
-                                    <img src="${thumbnailUrl}" 
-                                         alt="Foto kegiatan" 
-                                         onclick="window.open('https://drive.google.com/file/d/${log.fileId}/view', '_blank')"
-                                         onerror="this.parentElement.innerHTML='<div class=image-placeholder>📷 Foto tidak dapat dimuat</div>'">
-                                </div>
-                            `;
-                        } else if (log.berkas && log.berkas.includes('drive.google.com')) {
-                            imageHtml = `<a href="${log.berkas}" target="_blank" class="file-link">📷 Lihat Foto</a>`;
-                        }
-                        
-                        return `
-                            <div class="logbook-item">
-                                <h3>${log.judul}</h3>
-                                <p>${log.deskripsi}</p>
-                                <p class="date">📅 ${log.tanggal}</p>
-                                ${imageHtml}
-                            </div>
-                        `;
-                    }).join('');
-                } else {
-                    listDiv.innerHTML = '<div class="alert alert-info">Belum ada logbook untuk siswa ini.</div>';
-                }
-            } catch (error) {
-                console.error('Error loading student logbook:', error);
-                listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat logbook.</div>';
-            }
-        }
-
-        // ========================================
-        // HELPER FUNCTIONS
-        // ========================================
-        function showStudentTab(tab) {
-            document.querySelectorAll('#studentPage .tab').forEach(t => t.classList.remove('active'));
-            
-            const tabs = document.querySelectorAll('#studentPage .tab');
-            if (tab === 'profil') {
-                tabs[0].classList.add('active');
-                document.getElementById('profilTab').classList.remove('hidden');
-                document.getElementById('addTab').classList.add('hidden');
-                document.getElementById('viewTab').classList.add('hidden');
-            } else if (tab === 'add') {
-                tabs[1].classList.add('active');
-                document.getElementById('profilTab').classList.add('hidden');
-                document.getElementById('addTab').classList.remove('hidden');
-                document.getElementById('viewTab').classList.add('hidden');
-            } else {
-                tabs[2].classList.add('active');
-                document.getElementById('profilTab').classList.add('hidden');
-                document.getElementById('addTab').classList.add('hidden');
-                document.getElementById('viewTab').classList.remove('hidden');
-                
-                editingLogbookNo = null;
-                const submitBtn = document.getElementById('submitBtn');
-                submitBtn.textContent = 'Simpan Logbook';
-                submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-                document.getElementById('cancelBtn').classList.add('hidden');
-                document.getElementById('logbookForm').reset();
-                document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
-                
-                loadMyLogbook();
-            }
-        }
-
-        function showAlert(elementId, message, type) {
-            const alertDiv = document.getElementById(elementId);
-            alertDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
-            setTimeout(() => alertDiv.innerHTML = '', 5000);
-        }
-
-        function convertToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        }
-
-        function convertDateToInput(dateStr) {
-            if (!dateStr) return '';
-            const parts = dateStr.split('/');
-            if (parts.length === 3) {
-                return `${parts[2]}-${parts[1]}-${parts[0]}`;
-            }
-            return dateStr;
-        }
-
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;',
-                '\n': ' ',
-                '\r': ''
-            };
-            return text.replace(/[&<>"'\n\r]/g, m => map[m]);
-        }
-
-        document.getElementById('fileInput').addEventListener('change', function() {
-            const fileName = this.files[0] ? this.files[0].name : '';
-            document.getElementById('fileName').textContent = fileName ? `✓ ${fileName}` : '';
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
         });
 
-        function logout() {
-            currentUser = null;
-            currentRole = null;
-            selectedStudent = null;
-            document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('studentPage').classList.add('hidden');
-            document.getElementById('adminPage').classList.add('hidden');
-            document.getElementById('studentDetailPage').classList.add('hidden');
-            document.getElementById('loginForm').reset();
-        }
+        const data = await response.json();
+        if (data.success) showAlert('profilAlert', '✅ Profil berhasil disimpan!', 'success');
+        else showAlert('profilAlert', '❌ ' + (data.message || 'Gagal menyimpan'), 'error');
 
-        function openImageModal(imageUrl) {
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImage');
-            modal.style.display = 'block';
-            modalImg.src = imageUrl;
-        }
+      } catch (error) {
+        showAlert('profilAlert', '❌ Gagal menyimpan: ' + error.message, 'error');
+      }
 
-        function closeImageModal() {
-            document.getElementById('imageModal').style.display = 'none';
-        }
+      saveBtn.disabled = false;
+      saveBtn.textContent = '💾 Simpan Profil';
+    });
 
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeImageModal();
-            }
+    // ========================================
+    // LOGBOOK
+    // ========================================
+    document.getElementById('logbookForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+
+      const isEditing = editingLogbookNo !== null;
+      submitBtn.textContent = isEditing ? 'Mengupdate...' : 'Menyimpan...';
+
+      const tanggal = document.getElementById('tanggal').value;
+      const judul = document.getElementById('judul').value;
+      const deskripsi = document.getElementById('deskripsi').value;
+      const fileInput = document.getElementById('fileInput');
+
+      let fileData = '';
+      let fileName = '';
+
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        fileName = file.name;
+
+        try {
+          // auto kompres max 2MB (dataURL JPEG)
+          fileData = await compressImageToDataURL(file, 2 * 1024 * 1024);
+        } catch (error) {
+          showAlert('studentAlert', '⚠️ ' + error.message, 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = isEditing ? 'Update Logbook' : 'Simpan Logbook';
+          return;
+        }
+      }
+
+      try {
+        const payload = {
+          action: isEditing ? 'updateLogbook' : 'addLogbook',
+          username: currentUser,
+          tanggal,
+          judul,
+          deskripsi,
+          fileData,
+          fileName
+        };
+
+        if (isEditing) payload.no = editingLogbookNo;
+
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
         });
-    </script>
+
+        const data = await response.json();
+
+        if (data.success) {
+          showAlert('studentAlert', isEditing ? '✅ Logbook berhasil diupdate!' : '✅ Logbook berhasil disimpan!', 'success');
+          document.getElementById('logbookForm').reset();
+          document.getElementById('fileName').textContent = '';
+          document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+          editingLogbookNo = null;
+
+          submitBtn.textContent = 'Simpan Logbook';
+          submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+          document.getElementById('cancelBtn').classList.add('hidden');
+
+          loadMyLogbook();
+        } else {
+          showAlert('studentAlert', '❌ ' + (data.message || 'Gagal menyimpan'), 'error');
+        }
+      } catch (error) {
+        showAlert('studentAlert', '❌ Gagal menyimpan: ' + error.message, 'error');
+      }
+
+      submitBtn.disabled = false;
+      if (!isEditing) submitBtn.textContent = 'Simpan Logbook';
+    });
+
+    async function loadMyLogbook() {
+      const listDiv = document.getElementById('logbookList');
+
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=getLogbook&username=${encodeURIComponent(currentUser)}`);
+        const data = await response.json();
+
+        if (data.success && data.logbook && data.logbook.length > 0) {
+          listDiv.innerHTML = data.logbook.map(log => {
+            let imageHtml = '';
+
+            if (log.fileId) {
+              const thumbnailUrl = `https://drive.google.com/thumbnail?id=${log.fileId}&sz=w400`;
+              const fullImageUrl = `https://drive.google.com/uc?id=${log.fileId}`;
+              imageHtml = `
+                <div class="logbook-image">
+                  <img src="${thumbnailUrl}"
+                       alt="Foto kegiatan"
+                       onclick="openImageModal('${fullImageUrl}')"
+                       onerror="this.parentElement.innerHTML='<div class=image-placeholder>📷 Foto tidak dapat dimuat</div>'">
+                </div>
+              `;
+            } else if (log.berkas && String(log.berkas).includes('drive.google.com')) {
+              imageHtml = `<a href="${log.berkas}" target="_blank" class="file-link">📷 Lihat Foto</a>`;
+            }
+
+            return `
+              <div class="logbook-item">
+                <div class="logbook-actions">
+                  <button class="btn-action btn-edit"
+                    onclick="editLogbook(${log.no}, '${escapeHtml(log.tanggal)}', '${escapeHtml(log.judul)}', '${escapeHtml(log.deskripsi)}')">✏️ Edit</button>
+                  <button class="btn-action btn-delete" onclick="deleteLogbook(${log.no})">🗑️ Hapus</button>
+                </div>
+                <h3>${escapeHtml(log.judul || '')}</h3>
+                <p>${escapeHtml(log.deskripsi || '')}</p>
+                <p class="date">📅 ${escapeHtml(log.tanggal || '')}</p>
+                ${imageHtml}
+              </div>
+            `;
+          }).join('');
+        } else {
+          listDiv.innerHTML = '<div class="alert alert-info">Belum ada logbook. Mulai tambahkan kegiatan Anda!</div>';
+        }
+      } catch (error) {
+        listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat logbook.</div>';
+      }
+    }
+
+    function editLogbook(no, tanggal, judul, deskripsi) {
+      editingLogbookNo = no;
+
+      const dateParts = String(tanggal).split('/');
+      const formattedDate = dateParts.length === 3 ? `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}` : tanggal;
+
+      document.getElementById('tanggal').value = formattedDate;
+      document.getElementById('judul').value = judul;
+      document.getElementById('deskripsi').value = deskripsi;
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.textContent = 'Update Logbook';
+      submitBtn.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
+
+      document.getElementById('cancelBtn').classList.remove('hidden');
+
+      showStudentTab('add');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showAlert('studentAlert', '📝 Mode edit: Ubah data lalu klik "Update Logbook"', 'info');
+    }
+
+    function cancelEdit() {
+      editingLogbookNo = null;
+      document.getElementById('logbookForm').reset();
+      document.getElementById('fileName').textContent = '';
+      document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.textContent = 'Simpan Logbook';
+      submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+
+      document.getElementById('cancelBtn').classList.add('hidden');
+      document.getElementById('studentAlert').innerHTML = '';
+    }
+
+    async function deleteLogbook(no) {
+      if (!confirm('Apakah Anda yakin ingin menghapus logbook ini?')) return;
+
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=deleteLogbook&username=${encodeURIComponent(currentUser)}&no=${encodeURIComponent(no)}`);
+        const data = await response.json();
+
+        if (data.success) {
+          showAlert('studentAlert', '✅ Logbook berhasil dihapus!', 'success');
+          loadMyLogbook();
+        } else {
+          showAlert('studentAlert', '❌ ' + (data.message || 'Gagal menghapus'), 'error');
+        }
+      } catch (error) {
+        showAlert('studentAlert', '❌ Gagal menghapus: ' + error.message, 'error');
+      }
+    }
+
+    // ========================================
+    // ADMIN
+    // ========================================
+    async function loadStudentsForAdmin() {
+      const listDiv = document.getElementById('studentsList');
+      listDiv.innerHTML = '<div class="loading">Memuat daftar siswa...</div>';
+
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=getStudents`);
+        const data = await response.json();
+
+        if (data.success && data.students && data.students.length > 0) {
+          listDiv.innerHTML = data.students.map(student => `
+            <div class="student-card" onclick="viewStudentDetail('${escapeHtml(student.username)}', '${escapeHtml(student.nama)}')">
+              <h3>👤 ${escapeHtml(student.nama)}</h3>
+              <p>Username: ${escapeHtml(student.username)}</p>
+              <p style="font-size:12px; margin-top:8px; color:#667eea;">Klik untuk melihat detail →</p>
+            </div>
+          `).join('');
+        } else {
+          listDiv.innerHTML = '<div class="alert alert-info">Belum ada siswa terdaftar.</div>';
+        }
+      } catch (error) {
+        listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat daftar siswa.</div>';
+      }
+    }
+
+    async function viewStudentDetail(username, nama) {
+      selectedStudent = username;
+      document.getElementById('detailStudentName').textContent = nama;
+
+      document.getElementById('adminPage').classList.add('hidden');
+      document.getElementById('studentDetailPage').classList.remove('hidden');
+
+      showDetailTab('profil');
+    }
+
+    function backToAdmin() {
+      document.getElementById('studentDetailPage').classList.add('hidden');
+      document.getElementById('adminPage').classList.remove('hidden');
+      selectedStudent = null;
+    }
+
+    async function showDetailTab(tab) {
+      document.querySelectorAll('#studentDetailPage .tab').forEach(t => t.classList.remove('active'));
+
+      if (tab === 'profil') {
+        document.querySelectorAll('#studentDetailPage .tab')[0].classList.add('active');
+        document.getElementById('detailProfilTab').classList.remove('hidden');
+        document.getElementById('detailLogbookTab').classList.add('hidden');
+        await loadStudentProfile(selectedStudent);
+      } else {
+        document.querySelectorAll('#studentDetailPage .tab')[1].classList.add('active');
+        document.getElementById('detailProfilTab').classList.add('hidden');
+        document.getElementById('detailLogbookTab').classList.remove('hidden');
+        await loadStudentLogbook(selectedStudent);
+      }
+    }
+
+    async function loadStudentProfile(username) {
+      const displayDiv = document.getElementById('studentProfileDisplay');
+      displayDiv.innerHTML = '<div class="loading">Memuat profil...</div>';
+
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=getProfile&username=${encodeURIComponent(username)}`);
+        const data = await response.json();
+
+        if (data.success && data.profile) {
+          const p = data.profile;
+          const hasData = p.namaLengkap || p.tempatMagang || p.noAbsen;
+
+          if (!hasData) {
+            displayDiv.innerHTML = '<div class="alert alert-info">Siswa belum melengkapi profil.</div>';
+            return;
+          }
+
+          displayDiv.innerHTML = `
+            <div class="profile-card">
+              <h2>${escapeHtml(p.namaLengkap || '-')}</h2>
+              <p>No Absen: ${escapeHtml(p.noAbsen || '-')}</p>
+            </div>
+
+            <div class="info-grid">
+              <div class="info-item full-width">
+                <label>Email</label>
+                <span>${escapeHtml(p.email || '-')}</span>
+              </div>
+              <div class="info-item full-width">
+                <label>Telepon</label>
+                <span>${escapeHtml(p.telepon || '-')}</span>
+              </div>
+              <div class="info-item full-width">
+                <label>Tempat Magang</label>
+                <span>${escapeHtml(p.tempatMagang || '-')}</span>
+              </div>
+              <div class="info-item full-width">
+                <label>Alamat Tempat Magang</label>
+                <span>${escapeHtml(p.alamatMagang || '-')}</span>
+              </div>
+              <div class="info-item full-width">
+                <label>Posisi</label>
+                <span>${escapeHtml(p.posisi || '-')}</span>
+              </div>
+              <div class="info-item full-width">
+                <label>Pembimbing</label>
+                <span>${escapeHtml(p.pembimbing || '-')}</span>
+              </div>
+              <div class="info-item">
+                <label>Tanggal Mulai</label>
+                <span>${escapeHtml(p.tanggalMulai || '-')}</span>
+              </div>
+              <div class="info-item">
+                <label>Tanggal Selesai</label>
+                <span>${escapeHtml(p.tanggalSelesai || '-')}</span>
+              </div>
+            </div>
+          `;
+        } else {
+          displayDiv.innerHTML = '<div class="alert alert-error">Profil tidak ditemukan.</div>';
+        }
+      } catch (error) {
+        displayDiv.innerHTML = '<div class="alert alert-error">Gagal memuat profil.</div>';
+      }
+    }
+
+    async function loadStudentLogbook(username) {
+      const listDiv = document.getElementById('adminLogbookList');
+      listDiv.innerHTML = '<div class="loading">Memuat logbook...</div>';
+
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=getLogbook&username=${encodeURIComponent(username)}`);
+        const data = await response.json();
+
+        if (data.success && data.logbook && data.logbook.length > 0) {
+          listDiv.innerHTML = data.logbook.map(log => {
+            let imageHtml = '';
+
+            if (log.fileId) {
+              const thumbnailUrl = `https://drive.google.com/thumbnail?id=${log.fileId}&sz=w400`;
+              imageHtml = `
+                <div class="logbook-image">
+                  <img src="${thumbnailUrl}"
+                       alt="Foto kegiatan"
+                       onclick="window.open('https://drive.google.com/file/d/${log.fileId}/view', '_blank')"
+                       onerror="this.parentElement.innerHTML='<div class=image-placeholder>📷 Foto tidak dapat dimuat</div>'">
+                </div>
+              `;
+            } else if (log.berkas && String(log.berkas).includes('drive.google.com')) {
+              imageHtml = `<a href="${log.berkas}" target="_blank" class="file-link">📷 Lihat Foto</a>`;
+            }
+
+            return `
+              <div class="logbook-item">
+                <h3>${escapeHtml(log.judul || '')}</h3>
+                <p>${escapeHtml(log.deskripsi || '')}</p>
+                <p class="date">📅 ${escapeHtml(log.tanggal || '')}</p>
+                ${imageHtml}
+              </div>
+            `;
+          }).join('');
+        } else {
+          listDiv.innerHTML = '<div class="alert alert-info">Belum ada logbook untuk siswa ini.</div>';
+        }
+      } catch (error) {
+        listDiv.innerHTML = '<div class="alert alert-error">Gagal memuat logbook.</div>';
+      }
+    }
+
+    // ========================================
+    // UI NAV
+    // ========================================
+    function showStudentTab(tab) {
+      document.querySelectorAll('#studentPage .tab').forEach(t => t.classList.remove('active'));
+      const tabs = document.querySelectorAll('#studentPage .tab');
+
+      if (tab === 'profil') {
+        tabs[0].classList.add('active');
+        document.getElementById('profilTab').classList.remove('hidden');
+        document.getElementById('addTab').classList.add('hidden');
+        document.getElementById('viewTab').classList.add('hidden');
+
+      } else if (tab === 'add') {
+        tabs[1].classList.add('active');
+        document.getElementById('profilTab').classList.add('hidden');
+        document.getElementById('addTab').classList.remove('hidden');
+        document.getElementById('viewTab').classList.add('hidden');
+
+      } else {
+        tabs[2].classList.add('active');
+        document.getElementById('profilTab').classList.add('hidden');
+        document.getElementById('addTab').classList.add('hidden');
+        document.getElementById('viewTab').classList.remove('hidden');
+
+        // reset mode edit saat pindah ke view
+        editingLogbookNo = null;
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.textContent = 'Simpan Logbook';
+        submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        document.getElementById('cancelBtn').classList.add('hidden');
+
+        document.getElementById('logbookForm').reset();
+        document.getElementById('fileName').textContent = '';
+        document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+
+        loadMyLogbook();
+      }
+    }
+
+    function showAlert(elementId, message, type) {
+      const alertDiv = document.getElementById(elementId);
+      alertDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+      setTimeout(() => (alertDiv.innerHTML = ''), 5000);
+    }
+
+    function escapeHtml(text) {
+      const s = String(text ?? '');
+      const map = {
+        '&': '&amp;', '<': '&lt;', '>': '&gt;',
+        '"': '&quot;', "'": '&#039;', '\n': ' ', '\r': ''
+      };
+      return s.replace(/[&<>"'\n\r]/g, m => map[m]);
+    }
+
+    function convertDateToInput(dateStr) {
+      if (!dateStr) return '';
+      const parts = String(dateStr).split('/');
+      if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+      return dateStr;
+    }
+
+    function openFilePicker() {
+      document.getElementById('fileInput').click();
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function () {
+      const fileName = this.files[0] ? this.files[0].name : '';
+      document.getElementById('fileName').textContent = fileName ? `✓ ${fileName}` : '';
+    });
+
+    function logout() {
+      currentUser = null;
+      currentRole = null;
+      selectedStudent = null;
+      editingLogbookNo = null;
+
+      // Kalau mau logout total (hapus remember), uncomment:
+      // localStorage.removeItem('logbook_remember');
+      // localStorage.removeItem('logbook_username');
+      // localStorage.removeItem('logbook_password');
+
+      document.getElementById('loginPage').classList.remove('hidden');
+      document.getElementById('studentPage').classList.add('hidden');
+      document.getElementById('adminPage').classList.add('hidden');
+      document.getElementById('studentDetailPage').classList.add('hidden');
+      document.getElementById('loginForm').reset();
+    }
+
+    function openImageModal(imageUrl) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      modal.style.display = 'block';
+      modalImg.src = imageUrl;
+    }
+
+    function closeImageModal() {
+      document.getElementById('imageModal').style.display = 'none';
+    }
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closeImageModal();
+    });
+
+    // ========================================
+    // AUTO KOMPRES FOTO MAX 2MB
+    // ========================================
+    async function compressImageToDataURL(file, maxBytes = 2 * 1024 * 1024) {
+      // createImageBitmap tidak support di beberapa Safari lama, tapi mayoritas modern aman.
+      const bitmap = await createImageBitmap(file);
+
+      let quality = 0.86;
+      let scale = 1.0;
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      const encode = () => {
+        canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+        canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        return canvas.toDataURL('image/jpeg', quality);
+      };
+
+      for (let i = 0; i < 12; i++) {
+        const dataUrl = encode();
+        const base64 = dataUrl.split(',')[1] || '';
+        const approxBytes = Math.floor(base64.length * 0.75);
+
+        if (approxBytes <= maxBytes) return dataUrl;
+
+        if (quality > 0.5) quality -= 0.08;
+        else scale -= 0.12;
+
+        if (scale < 0.3) break;
+      }
+
+      throw new Error('Gambar terlalu besar walau sudah dikompres. Coba foto lain.');
+    }
+  </script>
 </body>
 </html>
