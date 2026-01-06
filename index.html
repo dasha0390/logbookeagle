@@ -375,7 +375,6 @@
       .info-item span { font-size: 14px; }
     }
 
-    /* tombol refresh (UI konsisten & kecil) */
     .refresh-mini {
       position: absolute;
       right: 15px;
@@ -392,7 +391,6 @@
     }
     .refresh-mini:hover { background: rgba(255,255,255,0.3); }
 
-    /* global loading (ringan, tidak mengubah UI) */
     #globalLoading {
       display: none;
       position: fixed;
@@ -522,6 +520,39 @@
               <input type="text" id="pembimbing" placeholder="Nama pembimbing di tempat magang">
             </div>
 
+            <!-- NEW: No HP Mentor -->
+            <div class="form-group">
+              <label>No HP Mentor</label>
+              <input type="tel" id="noHpMentor" placeholder="Contoh: 08xxxxxxxxxx">
+            </div>
+
+            <!-- NEW: Hari Kerja -->
+            <div class="form-group">
+              <label>Hari Kerja <span class="required">*</span></label>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; padding:10px; border:2px solid #e0e0e0; border-radius:10px;">
+                <label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" class="hariKerja" value="Senin"> Senin</label>
+                <label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" class="hariKerja" value="Selasa"> Selasa</label>
+                <label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" class="hariKerja" value="Rabu"> Rabu</label>
+                <label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" class="hariKerja" value="Kamis"> Kamis</label>
+                <label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" class="hariKerja" value="Jumat"> Jumat</label>
+                <label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" class="hariKerja" value="Sabtu"> Sabtu</label>
+                <label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" class="hariKerja" value="Minggu"> Minggu</label>
+              </div>
+              <small style="display:block; margin-top:8px; color:#666;">Centang hari kerja magang kamu.</small>
+            </div>
+
+            <!-- NEW: Jam Kerja -->
+            <div class="form-row">
+              <div class="form-group">
+                <label>Jam Kerja Mulai <span class="required">*</span></label>
+                <input type="time" id="jamKerjaMulai" required>
+              </div>
+              <div class="form-group">
+                <label>Jam Kerja Selesai <span class="required">*</span></label>
+                <input type="time" id="jamKerjaSelesai" required>
+              </div>
+            </div>
+
             <div class="form-row">
               <div class="form-group">
                 <label>Tanggal Mulai <span class="required">*</span></label>
@@ -554,7 +585,6 @@
               <textarea id="deskripsi" required placeholder="Jelaskan kegiatan yang dilakukan"></textarea>
             </div>
 
-            <!-- Upload Foto FIX (kamera+galeri+cancel) -->
             <div class="form-group">
               <label>Upload Foto (Opsional)</label>
               <div class="file-upload">
@@ -582,7 +612,6 @@
           </form>
         </div>
 
-        <!-- Tab Lihat Logbook -->
         <div id="viewTab" class="hidden">
           <div id="logbookList" class="loading">Memuat data...</div>
         </div>
@@ -641,7 +670,6 @@
     </div>
   </div>
 
-  <!-- Modal untuk zoom gambar -->
   <div id="imageModal" class="image-modal" onclick="closeImageModal()">
     <span class="image-modal-close">&times;</span>
     <div class="image-modal-content">
@@ -649,7 +677,6 @@
     </div>
   </div>
 
-  <!-- Global loading overlay -->
   <div id="globalLoading">
     <div class="box">
       🔄 Memproses...
@@ -661,14 +688,13 @@
     // =========================
     // GANTI URL WEB APP KAMU
     // =========================
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwG073ZtSzl3p72c869I3JSRTVgrX4uWVVEozKOj4jlkAlEaXiB-Q4xhE3meTay8o2Drw/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxokMjurYlSpJl8fCpDyAFe_0MNYhLPJZc_CWuyvBGUha_8l6GG2yDvE7ckbWwQcHLTIw/exec";
 
     let currentUser = null;
     let currentRole = null;
     let editingLogbookNo = null;
     let selectedStudent = null;
 
-    // file state (fix cancel + kamera/galeri)
     let selectedImageFile = null;
 
     function showGlobalLoading(show, text) {
@@ -681,12 +707,10 @@
     }
 
     document.addEventListener('DOMContentLoaded', async function() {
-      // default tanggal hari ini
       const today = new Date().toISOString().split('T')[0];
       const tanggalInput = document.getElementById('tanggal');
       if (tanggalInput) tanggalInput.value = today;
 
-      // auto-login jika remember me aktif
       const remember = localStorage.getItem('logbook_remember') === '1';
       const u = localStorage.getItem('logbook_username');
       const p = localStorage.getItem('logbook_password');
@@ -720,27 +744,21 @@
           }
         }
       } catch (e) {
-        // ignore, tetap di halaman login
       } finally {
         showGlobalLoading(false);
       }
     }
 
-    // =========================
-    // REFRESH ADVANCE (tanpa reload)
-    // =========================
     async function refreshCurrentPage() {
       try {
         showGlobalLoading(true, '🔄 Memperbarui data...');
 
-        // LOGIN PAGE
         if (!currentUser) {
           document.getElementById('loginForm').reset();
           showAlert('loginAlert', '🔄 Halaman login diperbarui', 'info');
           return;
         }
 
-        // SISWA
         if (currentRole === 'siswa') {
           const profilVisible = !document.getElementById('profilTab').classList.contains('hidden');
           const viewVisible = !document.getElementById('viewTab').classList.contains('hidden');
@@ -759,7 +777,6 @@
           return;
         }
 
-        // ADMIN
         if (currentRole === 'admin') {
           const adminVisible = !document.getElementById('adminPage').classList.contains('hidden');
           const detailVisible = !document.getElementById('studentDetailPage').classList.contains('hidden');
@@ -807,7 +824,6 @@
           currentUser = data.user;
           currentRole = data.role;
 
-          // remember me
           const remember = document.getElementById('rememberMe').checked;
           if (remember) {
             localStorage.setItem('logbook_remember', '1');
@@ -843,8 +859,43 @@
     });
 
     // =========================
+    // FIX: JAM ISO 1899 -> HH:mm
+    // =========================
+    function normalizeTime(val) {
+      if (!val) return '';
+
+      if (typeof val === 'string' && /^\d{2}:\d{2}(:\d{2})?$/.test(val.trim())) {
+        return val.trim().slice(0, 5);
+      }
+
+      if (typeof val === 'string' && val.includes('T')) {
+        const d = new Date(val);
+        if (!isNaN(d.getTime())) {
+          const hh = String(d.getHours()).padStart(2, '0');
+          const mm = String(d.getMinutes()).padStart(2, '0');
+          return `${hh}:${mm}`;
+        }
+        const m = val.match(/T(\d{2}):(\d{2})/);
+        if (m) return `${m[1]}:${m[2]}`;
+      }
+
+      return String(val);
+    }
+
+    // =========================
     // PROFIL
     // =========================
+    function getHariKerjaValue() {
+      const checked = Array.from(document.querySelectorAll('.hariKerja:checked')).map(x => x.value);
+      return checked.join(',');
+    }
+    function setHariKerjaValue(value) {
+      const set = new Set(String(value || '').split(',').map(s => s.trim()).filter(Boolean));
+      document.querySelectorAll('.hariKerja').forEach(cb => {
+        cb.checked = set.has(cb.value);
+      });
+    }
+
     async function loadProfile() {
       try {
         const response = await fetch(`${SCRIPT_URL}?action=getProfile&username=${encodeURIComponent(currentUser)}`);
@@ -862,6 +913,13 @@
           document.getElementById('pembimbing').value = p.pembimbing || '';
           document.getElementById('tanggalMulai').value = convertDateToInput(p.tanggalMulai) || '';
           document.getElementById('tanggalSelesai').value = convertDateToInput(p.tanggalSelesai) || '';
+
+          document.getElementById('noHpMentor').value = p.noHpMentor || '';
+          setHariKerjaValue(p.hariKerja || '');
+
+          // penting: normalizeTime
+          document.getElementById('jamKerjaMulai').value = normalizeTime(p.jamKerjaMulai);
+          document.getElementById('jamKerjaSelesai').value = normalizeTime(p.jamKerjaSelesai);
         }
       } catch (error) {
         console.error('Error loading profile:', error);
@@ -877,6 +935,7 @@
 
       try {
         showGlobalLoading(true, '🔄 Menyimpan profil...');
+
         const payload = {
           action: 'saveProfile',
           username: currentUser,
@@ -889,7 +948,14 @@
           posisi: document.getElementById('posisi').value,
           pembimbing: document.getElementById('pembimbing').value,
           tanggalMulai: document.getElementById('tanggalMulai').value,
-          tanggalSelesai: document.getElementById('tanggalSelesai').value
+          tanggalSelesai: document.getElementById('tanggalSelesai').value,
+
+          noHpMentor: document.getElementById('noHpMentor').value,
+          hariKerja: getHariKerjaValue(),
+
+          // simpan dari input time "HH:mm"
+          jamKerjaMulai: document.getElementById('jamKerjaMulai').value,
+          jamKerjaSelesai: document.getElementById('jamKerjaSelesai').value
         };
 
         const response = await fetch(SCRIPT_URL, {
@@ -913,11 +979,11 @@
     });
 
     // =========================
-    // UPLOAD FOTO FIX (kamera/galeri/cancel)
+    // UPLOAD FOTO
     // =========================
     function pickCamera() {
       const input = document.getElementById('fileInputCamera');
-      input.value = ''; // reset supaya cancel / pilih file sama tetap bisa
+      input.value = '';
       input.click();
     }
 
@@ -937,7 +1003,7 @@
     }
 
     document.getElementById('fileInputCamera').addEventListener('change', function() {
-      if (!this.files || this.files.length === 0) return; // user cancel
+      if (!this.files || this.files.length === 0) return;
       selectedImageFile = this.files[0];
       document.getElementById('fileName').textContent = `✓ ${selectedImageFile.name} (Kamera)`;
     });
@@ -971,7 +1037,6 @@
         showGlobalLoading(true, isEditing ? '🔄 Mengupdate logbook...' : '🔄 Menyimpan logbook...');
 
         if (selectedImageFile) {
-          // kompres max 2MB
           fileName = selectedImageFile.name || '';
           fileData = await compressImageToDataURL(selectedImageFile, 2 * 1024 * 1024);
         }
@@ -1005,10 +1070,7 @@
           submitBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
           document.getElementById('cancelBtn').classList.add('hidden');
 
-          // reset file
           clearSelectedImage();
-
-          // refresh list tanpa reload halaman
           await loadMyLogbook();
         } else {
           showAlert('studentAlert', '❌ ' + (data.message || 'Gagal menyimpan'), 'error');
@@ -1205,6 +1267,11 @@
             return;
           }
 
+          // normalizeTime juga dipakai di admin display
+          const jamMulai = normalizeTime(p.jamKerjaMulai);
+          const jamSelesai = normalizeTime(p.jamKerjaSelesai);
+          const jamKerjaText = (jamMulai || jamSelesai) ? `${escapeHtml(jamMulai || '-') } - ${escapeHtml(jamSelesai || '-')}` : '-';
+
           displayDiv.innerHTML = `
             <div class="profile-card">
               <h2>${escapeHtml(p.namaLengkap || '-')}</h2>
@@ -1236,6 +1303,20 @@
                 <label>Pembimbing</label>
                 <span>${escapeHtml(p.pembimbing || '-')}</span>
               </div>
+
+              <div class="info-item full-width">
+                <label>No HP Mentor</label>
+                <span>${escapeHtml(p.noHpMentor || '-')}</span>
+              </div>
+              <div class="info-item full-width">
+                <label>Hari Kerja</label>
+                <span>${escapeHtml(p.hariKerja || '-')}</span>
+              </div>
+              <div class="info-item full-width">
+                <label>Jam Kerja</label>
+                <span>${jamKerjaText}</span>
+              </div>
+
               <div class="info-item">
                 <label>Tanggal Mulai</label>
                 <span>${escapeHtml(p.tanggalMulai || '-')}</span>
@@ -1320,7 +1401,6 @@
         document.getElementById('addTab').classList.add('hidden');
         document.getElementById('viewTab').classList.remove('hidden');
 
-        // reset mode edit saat pindah ke view
         editingLogbookNo = null;
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.textContent = 'Simpan Logbook';
@@ -1368,7 +1448,6 @@
       selectedStudent = null;
       editingLogbookNo = null;
 
-      // logout = hapus remember me
       localStorage.removeItem('logbook_remember');
       localStorage.removeItem('logbook_username');
       localStorage.removeItem('logbook_password');
@@ -1400,7 +1479,6 @@
 
     // =========================
     // AUTO KOMPRES FOTO MAX 2MB
-    // (lebih kompatibel: fallback Image() jika createImageBitmap tidak ada)
     // =========================
     function readFileAsDataURL(file) {
       return new Promise((resolve, reject) => {
@@ -1421,7 +1499,6 @@
     }
 
     async function compressImageToDataURL(file, maxBytes = 2 * 1024 * 1024) {
-      // baca file -> image
       const originalDataURL = await readFileAsDataURL(file);
       const img = await loadImageFromDataURL(originalDataURL);
 
